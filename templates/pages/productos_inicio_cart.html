@@ -1,0 +1,4 @@
+<a class="nav-link" href="{{url_carrito}}">
+    <i class="fas fa-cart-arrow-down notification_icon carrito_top" onclick="irCarrito('{{url_carrito}}');"></i>
+    <span class="badge badge-{% if cantidad_cart == 0 %}success{% else %}danger yellow{% endif %} navbar-badge notification_normal">{{cantidad_cart}}</span>
+</a>

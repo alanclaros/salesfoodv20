@@ -1,0 +1,363 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+{% load static %}
+{% load jinja_tags %}
+
+{% block title %} | Carrito Compras {% endblock %}
+
+{% block js_modulo %}
+<script type="text/javascript" src="{% static "" %}js/home_page.js"></script>
+<!-- <script src="{% static '/js/registerSw.js' %}"></script> -->
+{% endblock %}
+
+{% block content %}
+
+<div class="row align-items-center">
+    <div class="col-sm-2">&nbsp;</div>
+    <div class="col-sm-8">
+        <!--div contenedor-->
+        <br>
+        <form name="formulario" method="POST" action="" onsubmit="return false;">
+            {% csrf_token %}
+            <div class="row w-100">
+                <div class="card card-primary card-tabs w-100">
+                    <div class="card-header p-0 pt-1 w-100 back_tabs">
+                        <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Datos del Pedido</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Forma de Pago</a>
+                            </li>
+                            <!-- <li class="nav-item">
+                      <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#custom-tabs-one-messages" role="tab" aria-controls="custom-tabs-one-messages" aria-selected="false">Messages</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">Settings</a>
+                    </li> -->
+                        </ul>
+                    </div>
+                    <div class="card-body w-100">
+                        <div class="tab-content" id="custom-tabs-one-tabContent">
+                            <div class="tab-pane fade show active w-100" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+                                <!--datos del pedido-->
+
+                                <table class="table3 w-100">
+                                    <tr>
+                                        <th colspan="3" class="w-100 center">Datos Cliente</th>
+                                    </tr>
+                                    <tr class="back1">
+                                        <td class="w-30 right">
+                                            <span class="red">&#42;</span> CI :&nbsp;
+                                        </td>
+                                        <td class="w-50 left">
+                                            <input type="text" name="ci" id="ci" autocomplete="off" placeholder="CI" class="form-control input w-90" onkeyup="validarNumero(this); txtValid(this); empiezaEscribir();" onblur="txtValid(this);">
+                                        </td>
+                                        <td class="w-20 center">
+                                            <div id="img_load">
+                                                &nbsp;
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                
+                                <table class="table3 w-100">
+                                    <tr class="back1">
+                                        <td class="w-30 right">
+                                            <span class="red">&#42;</span> Apellidos :&nbsp;
+                                        </td>
+                                        <td colspan="2" class="w-70 left">
+                                            <input type="text" autocomplete="off" name="apellidos" id="apellidos" autocomplete="off" placeholder="Apellidos" class="form-control input w-90" onkeyup="txtValid(this);" onblur="txtValid(this);">
+                                        </td>
+                                    </tr>
+                                    <tr class="back2">
+                                        <td class="w-30 right">
+                                            <span class="red">&#42;</span> Nombres :&nbsp;
+                                        </td>
+                                        <td colspan="2" class="w-70 left">
+                                            <input type="text" autocomplete="off" name="nombres" id="nombres" autocomplete="off" placeholder="Nombres" class="form-control input w-90" onkeyup="txtValid(this);" onblur="txtValid(this);">
+                                        </td>
+                                    </tr>
+                                    <tr class="back1">
+                                        <td class="w-30 right">
+                                            <span class="red">&#42;</span> Fonos :&nbsp;
+                                        </td>
+                                        <td colspan="2" class="w-70 left">
+                                            <input type="text" autocomplete="off" name="telefonos" id="telefonos" autocomplete="off" placeholder="telefonos" class="form-control input w-90" onkeyup="txtValid(this);" onblur="txtValid(this);">
+                                        </td>
+                                    </tr>
+                                    <tr class="back2">
+                                        <td class="w-30 right">
+                                            <span class="red">&#42;</span> Direccion :&nbsp;
+                                        </td>
+                                        <td colspan="2" class="w-70 left">
+                                            <input type="text" autocomplete="off" name="direccion" id="direccion" autocomplete="off" placeholder="Direccion" maxlength="250" class="form-control input w-90" onkeyup="txtValid(this);" onblur="txtValid(this);">
+                                        </td>
+                                    </tr>
+                                    <tr class="back1">
+                                        <td class="w-30 right">
+                                            Email :&nbsp;
+                                        </td>
+                                        <td colspan="2" class="w-70 left">
+                                            <input type="text" autocomplete="off" name="email" id="email" autocomplete="off" placeholder="email" class="form-control input w-90">
+                                        </td>
+                                    </tr>
+
+                                    <tr class="back2">
+                                        <td class="w-30 right v-top">
+                                            Mensaje :&nbsp;
+                                        </td>
+                                        <td colspan="2" class="w-70 left">
+                                            <textarea name="mensaje" id="mensaje" class="form-control input w-90 h-60"></textarea>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="back2">
+                                        <td colspan="3" class="w-100 center">
+                                            &nbsp;
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <table class="table3 w-100" id="tabla_detalle">
+                                    <tr>
+                                        <th class="w-55 center">Producto</th>
+                                        <th class="w-10 right">Cant</th>
+                                        <th class="w-15 right">Precio</th>
+                                        <th class="w-20 right">Total</th>
+                                    </tr>
+                                    {% for producto in lista_productos %}
+                                    <tr class="back{{forloop.counter|back_class}}">
+                                        <td class="w-55 left">
+                                            <img src="{% static '/img/png/delete.png' %}" class="pointer ico_img" onclick="eliminarProducto('{{producto.posicion}}');"> &nbsp;&nbsp; <b>{{producto.producto}}</b>
+                                            {%if producto.detalle.lista_componentes %}
+                                            (<em><b>Ingredientes :</b> 
+                                                {% for componente in producto.detalle.lista_componentes %}
+                                                    {% if componente.activo == 1 %}
+                                                        {{componente.componente}},
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </em>)
+                                            {% endif %}
+                                            
+                                            {%if producto.detalle.lista_refrescos %}
+                                            (<em><b>Refresco :</b> 
+                                                {% for refresco in producto.detalle.lista_refrescos %}
+                                                    {% if refresco.activo == 1 %}
+                                                        {{refresco.refresco}},
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </em>)
+                                            {% endif %}
+                                            
+                                            {%if producto.detalle.lista_papas %}
+                                            (<em><b>Papa :</b> 
+                                                {% for papa in producto.detalle.lista_papas %}
+                                                    {% if papa.activo == 1 %}
+                                                        {{papa.papa}},
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </em>)
+                                            {% endif %}
+                                            
+                                            {%if producto.detalle.lista_extras %}
+                                            (<em><b>Extra :</b> 
+                                                {% for extra in producto.detalle.lista_extras %}
+                                                    {% if extra.activo == 1 %}
+                                                        {{extra.extra}},
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </em>)
+                                            {% endif %}
+                                        </td>
+                                        <td class="w-10 right">
+                                            <input type="text" class="form-control input right w-95" id="pedido_{{producto.posicion}}" value="{{producto.cantidad}}" autocomplete="off" maxlength="3"
+                                                onkeyup="{% if vender_fracciones == 'si' %}validarNumeroPunto(this);{% else %}validarNumero(this);{% endif %}totalCarrito('{{producto.posicion}}');">
+                                            <input type="hidden" id="precio_{{producto.posicion}}" value="{{producto.precio}}">
+                                        </td>
+                                        <td class="w-15 right">
+                                            <span id="pedido_precio_{{producto.posicion}}">{{producto.precio}} Bs.</span>
+                                        </td>
+                                        <td class="w-20 right">
+                                            <b><span id="pedido_total_{{producto.posicion}}">{{producto.total}} Bs.</span></b>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+
+                                    <tr class="back2">
+                                        <td colspan="4" class="w-100 right">
+                                            <b>Total :&nbsp;</b><b><span id="total_carrito">{{total_pedido}} Bs.</span></b>
+                                        </td>
+                                    </tr>
+                                    
+                                    {% if total_pedido > 0 %}
+                                    <tr class="back1">
+                                        <td colspan="4" class="w-100 right">
+                                            <button class="btn btn-primary" id="btn_next" name="btn_next" onclick="nextPedido();">
+                                                <i class="nav-icon fas fa-arrow-right"></i>&nbsp;&nbsp;Siguiente
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+
+                                    <tr class="back1">
+                                        <td colspan="4" class="w-100 center">
+                                            &nbsp;
+                                        </td>
+                                    </tr>
+
+                                </table>
+                                <!--fin datos del pedido-->
+                            </div>
+                            <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+                                <!--formas de pago-->
+                                <div class="form-group">
+                                    <div class="custom-control custom-radio">
+                                        <input class="custom-control-input" type="radio" id="customRadio1" value="qr" name="tipo_p" onclick="formaDePago('qr');" checked>
+                                        <label for="customRadio1" class="custom-control-label">Pago con C&oacute;digo QR</label>
+                                    </div>
+                                    <table class="table3 font14 w-100" id="tabla_qr">
+                                        <tr class="back1">
+                                            <td class="w-100 font14 left">
+                                                <br>
+                                                Desde la aplicaci&oacute;n m&oacute;vil de su banco, escanee el c&oacute;digo QR que le enviaremos al finalizar el pedido.
+                                                <br><br>
+                                                Tambi&eacute;n puedes encontrar este c&oacute;digo QR como archivo adjunto que te enviaremos a tu correo electr&oacute;nico cuando realizes el pedido.
+                                                <br><br>
+                                                O puedes escribirnos un mensaje a estos n&uacute;meros 72706327 - 72706324, para que te enviemos el c&oacute;digo QR.
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <br>
+                                    <div class="custom-control custom-radio">
+                                        <input class="custom-control-input" type="radio" id="customRadio2" value="transferencia" name="tipo_p" onclick="formaDePago('transferencia');">
+                                        <label for="customRadio2" class="custom-control-label">Transferencia Bancaria</label>
+                                    </div>
+                                    <table class="table3 font14 w-100" id="tabla_transferencia" style="display: none;">
+                                        <tr class="back1">
+                                            <td class="w-100 font14 left">
+                                                <br>
+                                                Realiza una transferencia bancar&iacute;a por el monto total de tu pedido a este n&uacute;mero de cuenta:
+                                                <br><br>
+                                                Banco : BNB, Banco Nacional de Bolivia<br>
+                                                Beneficiario: Juan Paz Rodr&iacute;guez<br>
+                                                N&#176; Cuenta: 123456789 Moneda Bs.<br>
+                                                Tipo de Cuenta: Caja de Ahorro
+                                                <br><br>
+                                                Al momento de realizar la transferencia bancaria indica el monto total de tu pedido (pedido por: 450 Bs.)<br>
+                                                Manda una foto del dep&oacute;sito como comprobante de pago, junto a sus datos personales a este correo: juanpazr@gmail.com, tambi&aacute;n a estos n&uacute;meros de tel&eacute;fonos: 72706327, 72706324
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <br>
+                                <table class="table3 w-100">
+                                    <tr class="back2" style="display: none;" id="fila_resultado">
+                                        <td colspan="4" class="w-100 center">
+                                            <div id="div_resultado">&nbsp;</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="back2" style="display: none;">
+                                        <td colspan="4" class="w-100 center">
+                                            <div id="div_push_result"></div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table class="table3 w-100" id="tabla_boton">
+                                    {% if total_pedido > 0 %}
+                                    <tr class="back1">
+                                        <td class="w-100 center">
+                                            <button class="btn btn-secondary" name="btn_prev" id="btn_prev" onclick="anteriorPedido();">
+                                                <i class="nav-icon fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;Anterior
+                                            </button>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <button class="btn btn-primary" id="btn_enviar" name="btn_enviar" onclick="return realizarPedido();">
+                                                <i class="nav-icon fas fa-dollar-sign"></i>&nbsp;&nbsp;Hacer Pedido
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                </table>
+
+                                <!--fin formas de pago-->
+                            </div>
+                            <!-- <div class="tab-pane fade" id="custom-tabs-one-messages" role="tabpanel" aria-labelledby="custom-tabs-one-messages-tab">
+                       Morbi turpis dolor, vulputate vitae felis non, tincidunt congue mauris. Phasellus volutpat augue id mi placerat mollis. Vivamus faucibus eu massa eget condimentum. Fusce nec hendrerit sem, ac tristique nulla. Integer vestibulum orci odio. Cras nec augue ipsum. Suspendisse ut velit condimentum, mattis urna a, malesuada nunc. Curabitur eleifend facilisis velit finibus tristique. Nam vulputate, eros non luctus efficitur, ipsum odio volutpat massa, sit amet sollicitudin est libero sed ipsum. Nulla lacinia, ex vitae gravida fermentum, lectus ipsum gravida arcu, id fermentum metus arcu vel metus. Curabitur eget sem eu risus tincidunt eleifend ac ornare magna. 
+                    </div>
+                    <div class="tab-pane fade" id="custom-tabs-one-settings" role="tabpanel" aria-labelledby="custom-tabs-one-settings-tab">
+                       Pellentesque vestibulum commodo nibh nec blandit. Maecenas neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi euismod molestie tristique. Vestibulum consectetur dolor a vestibulum pharetra. Donec interdum placerat urna nec pharetra. Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam. Nunc et felis ut nisl commodo dignissim. In hac habitasse platea dictumst. Praesent imperdiet accumsan ex sit amet facilisis. 
+                    </div> -->
+                        </div>
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+            <input type="hidden" name="url_main" id="url_main" value="{{url_main}}">
+            <input type="hidden" name="url_webpush" id="url_webpush" value="{{url_webpush}}">
+            <input type="hidden" id="lista_ids" value="{{lista_ids}}">
+            <input type="hidden" id="lista_notificacion" value="{{lista_notificacion}}">
+            <input type="hidden" name="tipo_pedido" id="tipo_pedido" value="qr">
+        </form>
+
+
+    </div>
+    <!--fin div contenedor-->
+    <div class="col-sm-2">&nbsp;</div>
+</div>
+
+<!--compra de producto-->
+<div aria-hidden="true" aria-labelledby="carritoLabel" class="modal fade" id="modalCarrito" role="dialog" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="pull-left">Pedido de Productos</div>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <table class="table3 w-100">
+                    <tr>
+                        <th colspan="3" class="left w-100">Pedido</th>
+                    </tr>
+                    <tr class="back2">
+                        <td colspan="3" class="w-100 center">
+                            <h3>Esta seguro de realizar el pedido ?</h3>
+                        </td>
+                    </tr>
+                    <tr class="back1">
+                        <td class="w-100" colspan="3">&nbsp;</td>
+                    </tr>
+                    <tr class="back1">
+                        <td colspan="3" class="w-100 center">
+                            <button class="btn btn-secondary" id="cart2" onclick="return cancelarPedido();">
+                                <i class="nav-icon fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;Cancelar
+                            </button>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <button class="btn btn-primary" id="cart" onclick="return confirmarPedido();">
+                                <i class="nav-icon fas fa-dollar-sign"></i>&nbsp;&nbsp;Hacer Pedido
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <!-- <div class="modal-footer">
+                <button class="btn-sm close" data-dismiss="modal" type="button">Cerrar</button>
+            </div> -->
+            <!--end modal-content-->
+        </div>
+        <!--end modal-dialoge-->
+    </div>
+    <!--end myModal-->
+</div>
+<form name="form_delete" method="POST" action="">
+    {% csrf_token %}
+    <input type="hidden" name="operation_x" value="delete">
+    <input type="hidden" name="producto" value="">
+</form>
+<BR><BR>
+<!--pie de pagina-->
+{% include 'pages/pie_pagina.html' %}
+
+{% endblock %}

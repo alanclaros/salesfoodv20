@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+{% load jinja_tags %}
+{% load static %}
+
+{% block title %} | Reporte Preventas {% endblock %}
+
+{% block js_modulo %}
+<script type="text/javascript" src="{% static "" %}js/{{js_file}}.js"></script>
+{% endblock %}
+
+{% block content %}
+<!--contenedor-->
+<div class="row align-items-center">
+    <div class="col-sm-2">&nbsp;</div>
+    <div class="col-sm-8">
+        <!--contenido-->
+        <!--alerts-->
+        {% include 'partials/_alerts.html' %}
+        <br>
+
+        <div class="link_blue right">
+            <a href="{{url_main}}" class="link_blue">Volver</a>
+        </div>
+        <br>
+
+        <form name="formulario" method="post" action="" onsubmit="return false;">
+            {% csrf_token %}
+            <table class="table3 w-100">
+                <tr>
+                    <th colspan="4" class="center w-100">
+                        Preventas
+                    </th>
+                </tr>
+
+                {% if permisos.permiso %}
+                <tr class="back1">
+                    <td class="right w-20">
+                        Ciudad :&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <select name="ciudad" id="ciudad" class="form-control input w-90 h-35" onchange="cargarSucursalesCiudadPunto();">
+                            <option value="0">(TODOS)</option>
+                            {% for ciudad in lista_ciudades %}
+                            <option value="{{ciudad.ciudad_id}}">{{ciudad.ciudad}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td class="right w-20">
+                        Sucursal :&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <div id="div_sucursal">
+                            <select name="sucursal" id="sucursal" class="form-control input w-90 h-35">
+                                <option value="0">(TODOS)</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+                {% endif %}
+
+                <tr class="back1">
+                    <td class="right w-20">
+                        Punto :&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <div id="div_punto">
+                            <select name="punto" id="punto" class="form-control input w-90 h-35">
+                                <option value="0">(TODOS)</option>
+                                {% for punto in lista_puntos %}
+                                <option value="{{punto.punto_id}}">{{punto.sucursal_id.sucursal}}-{{punto.punto}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </td>
+                    <td class="right w-20">
+                        Anulados :&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="anulados" name="anulados">
+                            <label for="anulados" class="custom-control-label">&nbsp;</label>
+                        </div>
+                        {% if not permisos.permiso %}
+                        <input type="hidden" name="ciudad" id="ciudad" value="0">
+                        <input type="hidden" name="sucursal" id="sucursal" value="0">
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <tr class="back2">
+                    <td class="right w-20">
+                        Inventario :&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="inventario" name="inventario">
+                            <label for="inventario" class="custom-control-label">&nbsp;</label>
+                        </div>
+                    </td>
+                    <td class="right w-20">
+                        Venta :&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="venta" name="venta">
+                            <label for="venta" class="custom-control-label">&nbsp;</label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="back1">
+                    <td class="right w-20">
+                        Inicio :&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <input name="fecha_ini" id="fecha_ini" value="{{fecha_actual}}" type="text" class="form-control input w-90 left" readonly="readonly">
+                        <script type="text/javascript">
+                            var foopicker = new FooPicker({
+                                id: 'fecha_ini',
+                                dateFormat: 'dd-MMM-yyyy'
+                            });
+                        </script>
+                    </td>
+                    <td class="right w-20">
+                        Fin :&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <input name="fecha_fin" id="fecha_fin" value="{{fecha_actual}}" type="text" class="form-control input w-90 left" readonly="readonly">
+                        <script type="text/javascript">
+                            var foopicker = new FooPicker({
+                                id: 'fecha_fin',
+                                dateFormat: 'dd-MMM-yyyy'
+                            });
+                        </script>
+                    </td>
+                </tr>
+
+
+
+                <tr class="back2">
+                    <td colspan="4" class="w-100 center">&nbsp;</td>
+                </tr>
+                <tr class="back1">
+                    <td colspan="4" class="w-100 center">
+                        <input type="button" name="add_button" value="&nbsp;Mostrar&nbsp;" class="btn btn-primary btn-sm" onclick="preventas('print');">
+                        <input type="hidden" name="url_main" id="url_main" value="{{url_main}}">
+                        <input type="hidden" name="url_actual" id="url_actual" value="{{url_actual}}">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="button" name="add_button" value="&nbsp;Excel&nbsp;" class="btn btn-primary btn-sm" onclick="preventas('print_excel');">
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <br>
+    </div>
+    <!--fin div contenido-->
+    <div class="col-sm-2">&nbsp;</div>
+</div>
+<!--fin div contenedor-->
+<form name="form_print" method="post" action="" target="_blank">
+    {% csrf_token %}
+    <input type="hidden" name="operation_x" value="">
+    <input type="hidden" name="id" value="">
+    <input type="hidden" name="fecha_ini" value="">
+    <input type="hidden" name="fecha_fin" value="">
+    <input type="hidden" name="ciudad" value="">
+    <input type="hidden" name="sucursal" value="">
+    <input type="hidden" name="punto" value="">
+    <input type="hidden" name="anulados" value="">
+    <input type="hidden" name="inventario" value="">
+    <input type="hidden" name="venta" value="">
+</form>
+
+{% endblock %}

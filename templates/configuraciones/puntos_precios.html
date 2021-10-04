@@ -1,0 +1,160 @@
+{% load jinja_tags %}
+{% load static %}
+
+<div class="row align-items-center">
+    <div class="col-sm-2">&nbsp;</div>
+    <div class="col-sm-8">
+        <!--div contenedor-->
+        <br>
+        <!--alerts-->
+        {% include 'partials/_alerts.html' %}
+        <div class="link_blue right">
+            <span class="link_blue pointer" onclick="backWindow();">Volver a Puntos</span>
+        </div>
+        <br>
+
+
+        <br>
+        <form name="formulario" method="post" action="" onsubmit="return false;">
+            {% csrf_token %}
+            <table class="table3 w-100">
+                <tr>
+                    <th colspan="4" class="center w-100">
+                        Sucursal : {{punto_actual.sucursal_id.zona_id.zona}} - {{punto_actual.sucursal_id.sucursal}}
+                    </th>
+                </tr>
+                <tr class="back1">
+                    <td class="right w-25">
+                        Punto&nbsp;:&nbsp;
+                    </td>
+                    <td colspan="3" class="left w-75">
+                        {{punto_actual.punto}}
+                    </td>
+                </tr>
+
+                <tr class="back1">
+                    <td class="right w-25">
+                        &nbsp;
+                    </td>
+                    <td colspan="3" class="center w-75">
+                        Aumento o Disminuci&oacute;n a los precios configurados
+                    </td>
+                </tr>
+
+                <tr>
+                    <th class="w-25 right h-25">
+                        &nbsp;
+                    </th>
+                    <th class="w-25 right h-25">
+                        Precio A
+                    </th>
+                    <th class="w-25 right h-25">
+                        Precio B
+                    </th>
+                    <th class="w-25 right h-25">
+                        Precio C
+                    </th>
+                </tr>
+                <tr class="back1">
+                    <td class="w-25 right">
+                        Normal :&nbsp;
+                    </td>
+                    <td class="w-25 right">
+                        <input type="text" autocomplete="off" value="{{puntos_precios.aumento_precio_a}}" class="form-control input w-60 right" name="precio_a" id="precio_a" onkeyup="validarNumeroPuntoNegativo(this); setPrecioA();"> Bs.
+                    </td>
+                    <td class="w-25 right">
+                        <input type="text" autocomplete="off" value="{{puntos_precios.aumento_precio_b}}" class="form-control input w-60 right" name="precio_b" id="precio_b" onkeyup="validarNumeroPuntoNegativo(this); setPrecioB();"> Bs.
+                    </td>
+                    <td class="w-25 right">
+                        <input type="text" autocomplete="off" value="{{puntos_precios.aumento_precio_c}}" class="form-control input w-60 right" name="precio_c" id="precio_c" onkeyup="validarNumeroPuntoNegativo(this); setPrecioC();"> Bs.
+                    </td>
+                </tr>
+                <tr class="back1">
+                    <td class="w-25 right">
+                        Factura :&nbsp;
+                    </td>
+                    <td class="w-25 right">
+                        <input type="text" autocomplete="off" value="{{puntos_precios.aumento_precio_a_factura}}" class="form-control input w-60 right" name="precio_a_factura" id="precio_a_factura" onkeyup="validarNumeroPuntoNegativo(this);"> Bs.
+                    </td>
+                    <td class="w-25 right">
+                        <input type="text" autocomplete="off" value="{{puntos_precios.aumento_precio_b_factura}}" class="form-control input w-60 right" name="precio_b_factura" id="precio_b_factura" onkeyup="validarNumeroPuntoNegativo(this);"> Bs.
+                    </td>
+                    <td class="w-25 right">
+                        <input type="text" autocomplete="off" value="{{puntos_precios.aumento_precio_c_factura}}" class="form-control input w-60 right" name="precio_c_factura" id="precio_c_factura" onkeyup="validarNumeroPuntoNegativo(this);"> Bs.
+                    </td>
+                </tr>
+                <tr class="back1">
+                    <td class="w-25 right">
+                        Consig. :&nbsp;
+                    </td>
+                    <td class="w-25 right">
+                        <input type="text" autocomplete="off" value="{{puntos_precios.aumento_precio_a_consignacion}}" class="form-control input w-60 right" name="precio_a_consignacion" id="precio_a_consignacion" onkeyup="validarNumeroPuntoNegativo(this);">
+                        Bs.
+                    </td>
+                    <td class="w-25 right">
+                        <input type="text" autocomplete="off" value="{{puntos_precios.aumento_precio_b_consignacion}}" class="form-control input w-60 right" name="precio_b_consignacion" id="precio_b_consignacion" onkeyup="validarNumeroPuntoNegativo(this);">
+                        Bs.
+                    </td>
+                    <td class="w-25 right">
+                        <input type="text" autocomplete="off" value="{{puntos_precios.aumento_precio_c_consignacion}}" class="form-control input w-60 right" name="precio_c_consignacion" id="precio_c_consignacion" onkeyup="validarNumeroPuntoNegativo(this);">
+                        Bs.
+                    </td>
+                </tr>
+                <tr class="back1">
+                    <td class="w-25 right">
+                        Plan Pago :&nbsp;
+                    </td>
+                    <td class="w-25 right">
+                        <input type="text" autocomplete="off" value="{{puntos_precios.aumento_precio_a_pp}}" class="form-control input w-60 right" name="precio_a_pp" id="precio_a_pp" onkeyup="validarNumeroPuntoNegativo(this);"> Bs.
+                    </td>
+                    <td class="w-25 right">
+                        <input type="text" autocomplete="off" value="{{puntos_precios.aumento_precio_b_pp}}" class="form-control input w-60 right" name="precio_b_pp" id="precio_b_pp" onkeyup="validarNumeroPuntoNegativo(this);"> Bs.
+                    </td>
+                    <td class="w-25 right">
+                        <input type="text" autocomplete="off" value="{{puntos_precios.aumento_precio_c_pp}}" class="form-control input w-60 right" name="precio_c_pp" id="precio_c_pp" onkeyup="validarNumeroPuntoNegativo(this);"> Bs.
+                    </td>
+
+                </tr>
+
+                <tr class="back1">
+                    <td colspan="4" class="center w-100">&nbsp;</td>
+                </tr>
+                {% if permisos.modificar %}
+                <tr class="back2">
+                    <td colspan="4" class="center w-100">
+                        <button class="btn btn-primary btn-sm" name="add_button" onclick="guardarPuntosPrecios('formulario', 'add_button', 'button_cancel')">
+                            <i class="nav-icon fas fa-save"></i>&nbsp;&nbsp;Guardar
+                        </button>
+                        
+                        <input type="hidden" name="operation_x" value="modify_x">
+                        <input type="hidden" name="control_form" value="">
+                        <input type="hidden" name="button_cancel" value="Cancelar">
+                    </td>
+                </tr>
+                {% endif %}
+
+            </table>
+        </form>
+        <br>
+
+    </div>
+    <!--fin div contenedor-->
+    <div class="col-sm-2">&nbsp;</div>
+</div>
+
+<BR><BR>
+    <form name="form_operation" method="post" action="{{url_main}}">
+        {% csrf_token %}
+        <input type="hidden" name="module_x" value="{{module_x}}">
+        <input type="hidden" name="module_x2" value="{{module_x2}}">
+        <input type="hidden" name="module_x3" value="{{module_x3}}">
+        
+        <input type="hidden" name="operation_x" value="{{operation_x}}">
+        <input type="hidden" name="operation_x2" value="{{operation_x2}}">
+        <input type="hidden" name="operation_x3" value="{{operation_x3}}">
+        
+        <input type="hidden" name="id" value="{{id}}">
+        <input type="hidden" name="id2" value="{{id2}}">
+        <input type="hidden" name="id3" value="{{id3}}">
+    </form>
+</div>

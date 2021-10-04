@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+{% load static %}
+{% load jinja_tags %}
+
+{% block title %} | Carrito Compras {% endblock %}
+
+{% block js_modulo %}
+<script type="text/javascript" src="{% static "" %}js/home_page.js"></script>
+<!-- <script src="{% static '/js/registerSw.js' %}"></script> -->
+{% endblock %}
+
+{% block content %}
+
+<div class="row align-items-center">
+    <div class="col-sm-2">&nbsp;</div>
+    <div class="col-sm-8">
+        <!--div contenedor-->
+        <br>
+
+        <div class="card">
+            <div class="card-body">
+                <form name="formulario" method="POST" action="" onsubmit="return false;">
+                    {% csrf_token %}
+                    <table class="table3 w-100">
+                        <tr class="back2" style="display: none;" id="fila_resultado">
+                            <td colspan="4" class="w-100 center">
+                                <div id="div_resultado">&nbsp;</div>
+                            </td>
+                        </tr>
+                        <tr class="back2" style="display: none;">
+                            <td colspan="4" class="w-100 center">
+                                <div id="div_push_result"></div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table class="table3 w-100" id="tabla_cliente">
+                        <tr>
+                            <th colspan="3" class="w-100 center">Datos Cliente</th>
+                        </tr>
+                        <tr class="back1">
+                            <td class="w-30 right">
+                                <span class="red">&#42;</span> Apellidos :&nbsp;
+                            </td>
+                            <td colspan="2" class="w-70 left">
+                                <input type="text" autocomplete="off" name="apellidos" id="apellidos" autocomplete="off" placeholder="Apellidos" class="form-control input w-90" onkeyup="txtValid(this);" onblur="txtValid(this);">
+                            </td>
+                        </tr>
+                        <tr class="back2">
+                            <td class="w-30 right">
+                                <span class="red">&#42;</span> Nombres :&nbsp;
+                            </td>
+                            <td colspan="2" class="w-70 left">
+                                <input type="text" autocomplete="off" name="nombres" id="nombres" autocomplete="off" placeholder="Nombres" class="form-control input w-90" onkeyup="txtValid(this);" onblur="txtValid(this);">
+                            </td>
+                        </tr>
+                        <tr class="back1">
+                            <td class="w-30 right">
+                                <span class="red">&#42;</span> Fonos :&nbsp;
+                            </td>
+                            <td colspan="2" class="w-70 left">
+                                <input type="text" autocomplete="off" name="telefonos" id="telefonos" autocomplete="off" placeholder="telefonos" class="form-control input w-90" onkeyup="txtValid(this);" onblur="txtValid(this);">
+                            </td>
+                        </tr>
+                        <tr class="back2">
+                            <td class="w-30 right">
+                                Email :&nbsp;
+                            </td>
+                            <td colspan="2" class="w-70 left">
+                                <input type="text" autocomplete="off" name="email" id="email" autocomplete="off" placeholder="email" class="form-control input w-90">
+                            </td>
+                        </tr>
+
+                        <tr class="back1">
+                            <td class="w-30 right v-top">
+                                <span class="red">&#42;</span> Mensaje :&nbsp;
+                            </td>
+                            <td colspan="2" class="w-70 left">
+                                <textarea name="mensaje" id="mensaje" class="form-control input w-90 h-60"></textarea>
+                            </td>
+                        </tr>
+
+                        <tr class="back2">
+                            <td colspan="3" class="w-100 center">
+                                &nbsp;
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table class="table3 w-100" id="tabla_detalle">
+                        <tr>
+                            <th class="w-60 center">Producto</th>
+                            <th class="w-10 right">Cant</th>
+                            <th class="w-10 right">Precio</th>
+                            <th class="w-20 right">Total</th>
+                        </tr>
+                        {% for producto in lista_productos %}
+                        <tr class="back{{forloop.counter|back_class}}">
+                            <td class="w-60 left">
+                                <img src="{% static '/img/png/delete.png' %}" class="pointer ico_img" onclick="eliminarProducto('{{producto.producto_id}}');"> &nbsp;&nbsp; {{producto.producto}}
+                            </td>
+                            <td class="w-10 right">
+                                <input type="text" class="form-control input right w-95" id="pedido_{{producto.producto_id}}" value="{{producto.cantidad}}" autocomplete="off" maxlength="3"
+                                    onkeyup="{% if vender_fracciones == 'si' %}validarNumeroPunto(this);{% else %}validarNumero(this);{% endif %}totalCarrito('{{producto.producto_id}}');">
+                                <input type="hidden" id="precio_{{producto.producto_id}}" value="{{producto.precio}}">
+                            </td>
+                            <td class="w-10 right">
+                                <span id="pedido_precio_{{producto.producto_id}}">{{producto.precio}} Bs.</span>
+                            </td>
+                            <td class="w-20 right">
+                                <b><span id="pedido_total_{{producto.producto_id}}">{{producto.total}} Bs.</span></b>
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                        <tr class="back2">
+                            <td colspan="4" class="w-100 right">
+                                <b>Total :&nbsp;</b><b><span id="total_carrito">{{total_pedido}} Bs.</span></b>
+                            </td>
+                        </tr>
+
+                        <tr class="back1">
+                            <td colspan="4" class="w-100 center">
+                                &nbsp;
+                            </td>
+                        </tr>
+
+                        {% if total_pedido > 0 %}
+                        <tr class="back1">
+                            <td colspan="4" class="w-100 center">
+                                <input type="button" class="btn btn-primary btn-sm" name="btn_enviar" id="btn_enviar" value="&nbsp;Hacer Pedido&nbsp;" onclick="return realizarPedido();">
+                            </td>
+                        </tr>
+                        {% endif %}
+
+                    </table>
+                    <input type="hidden" name="url_main" id="url_main" value="{{url_main}}">
+                    <input type="hidden" name="url_webpush" id="url_webpush" value="{{url_webpush}}">
+                    <input type="hidden" id="lista_ids" value="{{lista_ids}}">
+                </form>
+            </div>
+
+        </div>
+    </div>
+    <!--fin div contenedor-->
+    <div class="col-sm-2">&nbsp;</div>
+</div>
+
+<!--compra de producto-->
+<div aria-hidden="true" aria-labelledby="carritoLabel" class="modal fade" id="modalCarrito" role="dialog" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="pull-left">Pedido de Productos</div>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <table class="table3 w-100">
+                    <tr>
+                        <th colspan="3" class="left w-100">Pedido</th>
+                    </tr>
+                    <tr class="back2">
+                        <td colspan="3" class="w-100 center">
+                            <h3>Esta seguro de realizar el pedido ?</h3>
+                        </td>
+                    </tr>
+                    <tr class="back1">
+                        <td class="w-100" colspan="3">&nbsp;</td>
+                    </tr>
+                    <tr class="back1">
+                        <td colspan="3" class="w-100 center">
+                            <input type="button" id="cart" value="Continuar" class="btn btn-primary btn-sm" onclick="return confirmarPedido();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="button" id="cart2" value="&nbsp;Cancelar&nbsp;" class="btn btn-primary btn-sm" onclick="return cancelarPedido();">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-sm close" data-dismiss="modal" type="button">Cerrar</button>
+            </div>
+            <!--end modal-content-->
+        </div>
+        <!--end modal-dialoge-->
+    </div>
+    <!--end myModal-->
+</div>
+<form name="form_delete" method="POST" action="">
+    {% csrf_token %}
+    <input type="hidden" name="operation_x" value="delete">
+    <input type="hidden" name="producto" value="">
+</form>
+<BR><BR>
+<!--pie de pagina-->
+{% include 'pages/pie_pagina.html' %}
+
+{% endblock %}

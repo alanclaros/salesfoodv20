@@ -1,0 +1,46 @@
+{% load jinja_tags %}
+{% load static %}
+
+<table class="tablab w-100">
+    <tr>
+        <th class="w-40 left">
+            Componente
+        </th>
+        <th class="w-20 left">
+            Cant.
+        </th>
+        <th class="w-20 left">
+            Def.
+        </th>
+        <th class="w-10 left">
+            Pos.
+        </th>
+        <th class="w-10 left">
+            &nbsp;
+        </th>
+    </tr>
+    {% for componente in componentes %}
+    <tr class="back{{forloop.counter|back_class}}">
+        <td class="left w-40">
+            {{componente.componente}}
+        </td>
+        <td class="left w-20">
+            <input type="text" id="componente_cantidad_{{componente.componente_id}}" autocomplete="off" class="form-control input right w-80" onkeyup="validarNumero(this);">
+        </td>
+        <td class="left w-20">
+            <div class="custom-control custom-checkbox">
+                <input class="custom-control-input" type="checkbox" id="componente_defecto_{{componente.componente_id}}" value="1">
+                <label for="componente_defecto_{{componente.componente_id}}" class="custom-control-label">&nbsp;</label>
+            </div>
+        </td>
+        <td class="left w-10">
+            <input type="text" id="componente_pos_{{componente.componente_id}}" autocomplete="off" class="form-control input right w-80" onkeyup="validarNumero(this);">
+        </td>
+        <td class="center w-10">
+            <input type="hidden" id="componente_nombre_{{componente.componente_id}}" value="{{componente.componente}}">
+            <img src="{% static 'img/png/activo.png' %}" class="ico_img pointer" onMouseOver=" overlib('seleccionar componente',CAPTION,'componente',WIDTH,'120',LEFT); return true" onMouseOut=" nd(); return true"
+                onclick="seleccionarComponente('{{componente.componente_id}}'); nd();">
+        </td>
+    </tr>
+    {% endfor %}
+</table>

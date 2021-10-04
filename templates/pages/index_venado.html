@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+{% load static %}
+{% load jinja_tags %}
+
+{% block title %} | Inicio {% endblock %}
+
+{% block content %}
+<br>
+<div class="row">
+    <div class="col-12 center">
+        <!-- <img src="{% static 'img/page/cabecera_index2.jpg' %}" class="img-fluid"> -->
+        <img src="{% static 'img/page/cabecera_index2_venado.jpg' %}" class="img-fluid">
+    </div>
+</div>
+
+<!--cuadros-->
+<br>
+<table class="w-100">
+    <tr>
+        <td class="w-4">&nbsp;</td>
+        <td class="w-96 center">
+            <!--primeros 3 cuadros depues de la imagen-->
+            <div class="row w-100 cuadros_index">
+                <div class="col-sm-6 center">
+                    <!-- <img src="{% static 'img/page/polo_logo.jpg' %}" class="img-fluid"> -->
+                    <img src="{% static 'img/page/venado_logo_240.jpg' %}" class="img-fluid">
+                    <br>
+                    <div class="index_titulo w-90 center">Productos</div>
+                    <br>
+                    <div class="cuadro_index w-90 left">
+                        <!-- <ul>
+                            <li>
+                                Camisas para niños <a href="#" class="link_index">mas...</a>
+                            </li>
+                            <li>
+                                Pantalones para niños, <a href="#" class="link_index">mas...</a>
+                            </li>
+                            <li>
+                                Deportivos para niños, <a href="#" class="link_index">mas...</a>
+                            </li>
+                            <li>
+                                Juego de ropa para eventos, <a href="#" class="link_index">mas...</a>
+                            </li>
+                        </ul> -->
+                        <ul>
+                            <li>
+                                Levaduras <a href="#" class="link_index">mas...</a>
+                            </li>
+                            <li>
+                                Cereales, <a href="#" class="link_index">mas...</a>
+                            </li>
+                            <li>
+                                Mayonesas, <a href="#" class="link_index">mas...</a>
+                            </li>
+                            <li>
+                                Ketchup, <a href="#" class="link_index">mas...</a>
+                            </li>
+                        </ul>
+                        <br>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 center">
+                    <!-- <img src="{% static 'img/page/ternurita_logo.jpg' %}" class="img-fluid"> -->
+                    <img src="{% static 'img/page/bristar_logo_240.jpg' %}" class="img-fluid">
+                    <br>
+                    <div class="index_titulo w-90 center">Productos</div>
+                    <br>
+                    <div class="cuadro_index w-90 left">
+                        <ul>
+                            <li>
+                                Avenas <a href="#" class="link_index">>></a>
+                            </li>
+                            <li>
+                                Productos de limpieza <a href="#" class="link_index">>></a>
+                            </li>
+                            <li>
+                                Maicena <a href="#" class="link_index">>></a>
+                            </li>
+                        </ul>
+                        <br>
+                    </div>
+                </div>
+
+            </div>
+        </td>
+    </tr>
+</table>
+
+<!--pie de pagina-->
+{% include 'pages/pie_pagina.html' %}
+
+{% endblock %}

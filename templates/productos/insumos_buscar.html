@@ -1,0 +1,31 @@
+{% load jinja_tags %}
+{% load static %}
+
+<table class="tablab w-100">
+    <tr>
+        <th class="w-70 left">
+            Insumo
+        </th>
+        <th class="w-20 left">
+            Cant
+        </th>
+        <th class="w-10 left">
+            &nbsp;
+        </th>
+    </tr>
+    {% for insumo in insumos %}
+    <tr class="back{{forloop.counter|back_class}}">
+        <td class="left w-70">
+            {{insumo.insumo}}
+        </td>
+        <td class="left w-20">
+            <input type="text" id="insumo_cantidad_{{insumo.insumo_id}}" autocomplete="off" class="form-control input right w-80" onkeyup="validarNumero(this);">
+        </td>
+        <td class="center w-10">
+            <input type="hidden" id="insumo_nombre_{{insumo.insumo_id}}" value="{{insumo.insumo}}">
+            <img src="{% static 'img/png/activo.png' %}" class="ico_img pointer" onMouseOver=" overlib('seleccionar insumo',CAPTION,'Insumo',WIDTH,'120',LEFT); return true" onMouseOut=" nd(); return true"
+                onclick="seleccionarInsumo('{{insumo.insumo_id}}'); nd();">
+        </td>
+    </tr>
+    {% endfor %}
+</table>

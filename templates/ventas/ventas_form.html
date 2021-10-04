@@ -1,0 +1,433 @@
+{% load jinja_tags %}
+{% load static %}
+
+<script type="text/javascript" src="{% static "" %}js/{{js_file}}.js"></script>
+<!-- InputMask -->
+<script src="{% static 'plugins/moment/moment.min.js' %}"></script>
+<script src="{% static 'plugins/inputmask/min/jquery.inputmask.bundle.min.js' %}"></script>
+
+<!-- Page script -->
+<script>
+    $(function () {
+        //Datemask dd/mm/yyyy
+        $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+        $('[data-mask]').inputmask()
+    })
+</script>
+
+{% if operation_x == 'add' %}
+<link rel="stylesheet" href="{% static 'js/autosuggest/autosuggest.css' %}">
+<script type="text/javascript" src="{% static "" %}js/autosuggest/autosuggest.js"></script>
+<!-- Autosuggest data: -->
+<script type="text/javascript">
+    var suggest_custom_array_2 = [];
+    var precio_a = [];
+    var precio_b = [];
+    var precio_c = [];
+    var precio_a_factura = [];
+    var precio_b_factura = [];
+    var precio_c_factura = [];
+    var precio_a_consignacion = [];
+    var precio_b_consignacion = [];
+    var precio_c_consignacion = [];
+    var precio_a_pp = [];
+    var precio_b_pp = [];
+    var precio_c_pp = [];
+    {% for producto in lista_productos %}
+    suggest_custom_array_2.push(['{{producto.producto}}', '{{producto.producto_id}}']);
+    precio_a['{{producto.producto_id}}'] = '{{producto.precio_a}}';
+    precio_b['{{producto.producto_id}}'] = '{{producto.precio_b}}';
+    precio_c['{{producto.producto_id}}'] = '{{producto.precio_c}}';
+    precio_a_factura['{{producto.producto_id}}'] = '{{producto.precio_a_factura}}';
+    precio_b_factura['{{producto.producto_id}}'] = '{{producto.precio_b_factura}}';
+    precio_c_factura['{{producto.producto_id}}'] = '{{producto.precio_c_factura}}';
+    precio_a_consignacion['{{producto.producto_id}}'] = '{{producto.precio_a_consignacion}}';
+    precio_b_consignacion['{{producto.producto_id}}'] = '{{producto.precio_b_consignacion}}';
+    precio_c_consignacion['{{producto.producto_id}}'] = '{{producto.precio_c_consignacion}}';
+    precio_a_pp['{{producto.producto_id}}'] = '{{producto.precio_a_pp}}';
+    precio_b_pp['{{producto.producto_id}}'] = '{{producto.precio_b_pp}}';
+    precio_c_pp['{{producto.producto_id}}'] = '{{producto.precio_c_pp}}';
+    {% endfor %}
+</script>
+{% endif %}
+
+<!--contenedor-->
+<div class="row align-items-center">
+    <div class="col-sm-2">&nbsp;</div>
+    <div class="col-md-8">
+        <!--contenido-->
+        <!--alerts-->
+        {% include 'partials/_alerts.html' %}
+        <br>
+        <div class="link_blue right">
+            <span class="link_blue pointer" onclick="backWindow();">Volver</span>
+        </div>
+        <br>
+        <form name="formulario" method="post" action="" onsubmit="return false;">
+            {% csrf_token %}
+            <table class="table3 w-100">
+                <tr>
+                    <th colspan="4" class="center w-100">
+                        Adicionar Venta
+                    </th>
+                </tr>
+
+                <tr class="back1">
+                    <td class="right w-20">
+                        Almacen&nbsp;:&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <select name="almacen" id="almacen" class="form-control input w-90 h-35">
+                            {% for almacen in lista_almacenes %}
+                            <option value="{{almacen.almacen_id}}">{{almacen.sucursal_id.sucursal}}-{{almacen.almacen}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td class="right w-20">
+                        Caja&nbsp;:&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <select name="caja" id="caja" class="form-control input w-90 h-35">
+                            <option value="{{caja_usuario.caja_id}}">{{caja_usuario.caja}}</option>
+                        </select>
+                    </td>
+                </tr>
+
+                <tr class="back2">
+                    <td class="right w-20">
+                        Venta&nbsp;:&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <select name="tipo_venta" id="tipo_venta" class="form-control input w-90 h-35" onchange="mostrarPPVenta();verificarCostosVenta();">
+                            <option value="0">---</option>
+                            <option value="CONTADO">Contado</option>
+                            <option value="FACTURA">Factura</option>
+                            <option value="CONSIGNACION">Consignacion</option>
+                            <option value="PLANPAGO">PlanPago</option>
+                        </select>
+                    </td>
+                    <td class="right w-20">
+                        Precio&nbsp;:&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <select name="costo_abc" id="costo_abc" class="form-control input w-90 h-35" onchange="verificarCostosVenta();">
+                            {% if productos_precios_abc %}
+                            <option value="0">---</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            {% else %}
+                            <option value="A">A</option>
+                            {% endif %}
+                        </select>
+                    </td>
+                </tr>
+
+                <tr class="back1" id="fila_pp" style="display: none;">
+                    <td class="right w-20">
+                        <label>Cuotas : </label><br>
+                        <input type="text" name="numero_cuotas" value="{{plan_pagos.numero_cuotas}}" id="numero_cuotas" autocomplete="off" class="form-control input right w-50" onkeyup="validarNumero(this);">
+                    </td>
+                    <td colspan="3" class="left w-80">
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" id="radio1_pp" name="tipo_pp" value="tipo_fecha" checked="" onchange="tipoPPVenta();">
+                            <label for="radio1_pp" class="custom-control-label w-25 left">Fecha&nbsp;Fija</label>
+                            <input name="fecha_fija" id="fecha_fija" value="{{fecha_actual}}" type="text" class="form-control input w-30 left" readonly="readonly">
+                            <script type="text/javascript">
+                                var foopicker = new FooPicker({
+                                    id: 'fecha_fija',
+                                    dateFormat: 'dd-MMM-yyyy'
+                                });
+                            </script>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" id="radio2_pp" name="tipo_pp" value="tipo_dias" onchange="tipoPPVenta();">
+                            <label for="radio2_pp" class="custom-control-label w-25 left">D&iacute;as</label>
+                            <input type="text" name="dias" id="dias" value="{{plan_pagos.tiempo_dias}}" autocomplete="off" class="form-control input right w-30" onkeyup="validarNumero(this);">
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="back2">
+                    <td colspan="4" class="left w-100">
+                        &nbsp; 
+                    </td>
+                </tr>
+
+            </table>
+
+            <!--preventas-->
+            {% if lista_preventas %}
+            <table class="table3 w-100">
+                <tr class="back1">
+                    <td class="w-20 right">Preventa :&nbsp;</td>
+                    <td class="left w-80 v-middle">
+                        <div id="div_lista_preventa">
+                            <select name="preventa" id="preventa" class="form-control input w-80 h-35">
+                                <option value="0">---</option>
+                                {% for preventa in lista_preventas %}
+                                <option value="{{preventa.preventa_id}}">{{preventa.fecha|fecha_mostrar:'dd-MMM-yyyy'}}, ({{preventa.numero_preventa}}) - {{preventa.apellidos}} {{preventa.nombres}}, {{preventa.total}} bs.</option>
+                                {% endfor %}
+                            </select>
+                            <input type="button" class="btn btn-secondary btn-xs v-middle" value="Cargar" onclick="loadPreventaData();">
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            {% endif %}
+            
+            <!--viene de pedidos-->
+            {% if pedido_id != 0 %}
+            <table class="table3 w-100">
+                <tr class="back1">
+                    <td class="w-100 right">
+                        <input type="button" class="btn btn-primary btn-sm" value="Cargar Pedido" onclick="loadPedidoVenta();">
+                        <input type="hidden" id="pe_apellidos" value="{{pedido.apellidos}}">
+                        <input type="hidden" id="pe_nombres" value="{{pedido.nombres}}">
+                        <input type="hidden" id="pe_telefonos" value="{{pedido.telefonos}}">
+                        <input type="hidden" id="pe_detalles" value="{{cant_detalles}}">
+                        {% for detalle in pedido.detalles %}
+                        <input type="hidden" id="pe_det_producto_id_{{forloop.counter}}" value="{{detalle.producto_id}}">
+                        <input type="hidden" id="pe_det_producto_{{forloop.counter}}" value="{{detalle.producto}}">
+                        <input type="hidden" id="pe_det_cantidad_{{forloop.counter}}" value="{{detalle.cantidad}}">
+                        
+                        {% endfor %}
+                    </td>
+                </tr>
+            </table>
+            {% endif %}
+
+            <!--datos de la ultima venta del dia-->
+            <div id="div_ventas_dia">
+                {% include 'ventas/ventas_dia.html' %}
+            </div>
+
+            <table class="table3 w-100">
+                <tr class="back1">
+                    <td class="w-100 right">
+                        <input type="button" class="btn btn-primary btn-sm" id="btn_cancelar_venta" value="Cancelar" onclick="cancelarVenta();" style="display: none;">
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="button" class="btn btn-primary btn-sm" id="btn_nueva_venta" value="Nueva Venta" onclick="nuevaVenta();">
+                    </td>
+                </tr>
+            </table>
+
+            <div id="div_listap" style="display: none;">
+                
+                <div class="card card-primary collapsed-card">
+                    <div class="card-header back_tabs">
+                      <span class="font14"><b>Cliente :</b></span>  <span class="font14" id="cliente_detalle"><b>SIN NOMBRE</b>, NIT : <b>0</b></span>
+                        <input type="hidden" name="apellidos" id="apellidos" value="SIN NOMBRE">
+                        <input type="hidden" name="nombres" id="nombres" value="">
+                        <input type="hidden" name="ci_nit" id="ci_nit" value="0">
+                        <input type="hidden" name="telefonos" id="telefonos" value="">
+  
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card-body w-100 card_body_width" style="display: none;">
+                    <table class="table3 w-100">
+
+                        <tr class="back2">
+                            <td colspan="4" class="right w-100">
+                                <input type="text" class="form-control search input w-20" name="b_ci_nit" id="b_ci_nit" value="" placeholder="CI/NIT">
+                                <label class="w-2">&nbsp;</label>
+                                <input type="text" class="form-control search input w-20" name="b_apellidos" id="b_apellidos" value="" placeholder="Apellidos">
+                                <label class="w-2">&nbsp;</label>
+                                <input type="text" class="form-control search input w-20" name="b_nombres" id="b_nombres" value="" placeholder="nombres">
+                                <label class="w-6">&nbsp;</label>
+                                <button type="button" class="btn btn-primary btn-xs" onMouseOver=" overlib('buscar cliente',CAPTION,'',WIDTH,'120',LEFT); return true" onMouseOut=" nd(); return true" onclick="buscarClienteVenta();nd();">
+                                    <img id="btn_buscar_cliente" class="ico_img pointer" src="{% static '/img/png/cliente_buscar.png' %}">
+                                </button>
+                                <button type="button" class="btn btn-primary btn-xs" onMouseOver=" overlib('minimizar',CAPTION,'',WIDTH,'120',LEFT); return true" onMouseOut=" nd(); return true" onclick="minimizarClienteVenta();nd();">
+                                    <img id="btn_minimizar_cliente" class="ico_img pointer" src="{% static '/img/png/minimizar.png' %}">
+                                </button>
+                            </td>
+                        </tr>
+
+                        <tr class="back1">
+                            <td colspan="4" class="left w-100">
+                                <div id="div_clientes">
+                                    <i>resultado busqueda</i>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr class="back2">
+                            <td colspan="4" class="right w-100">
+                                <button type="button" class="btn btn-primary btn-xs" onMouseOver=" overlib('nuevo cliente',CAPTION,'Cliente',WIDTH,'120',LEFT); return true" onMouseOut=" nd(); return true" onclick="nuevoClienteVenta();nd();">
+                                    <img id="btn_nuevo_cliente" class="ico_img pointer" src="{% static '/img/png/cliente_add.png' %}">
+                                </button>
+                                <button type="button" class="btn btn-primary btn-xs" onMouseOver=" overlib('minimizar',CAPTION,'',WIDTH,'120',LEFT); return true" onMouseOut=" nd(); return true" onclick="minimizarNuevoClienteVenta();nd();">
+                                    <img id="btn_minimizar_nuevo_cliente" class="ico_img pointer" src="{% static '/img/png/minimizar.png' %}">
+                                </button>
+                            </td>
+                        </tr>
+                        
+                        <tr class="back1">
+                            <td colspan="4" class="left w-100">
+                                <div id="div_nuevo_cliente">
+                                    &nbsp;
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+              </div>
+            
+                
+                <table class="table3 w-100">
+                    <tr class="back1">
+                        <td colspan="2" class="w-100">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="w-100 center">Lista de Productos</th>
+                    </tr>
+                    <tr class="back1">
+                        <td class="w-40 left" id="columna1">
+                            &nbsp;
+                        </td>
+                        <td class="w-60 center" id="columna2">
+                            <table class="table3 w-100">
+                                <tr>
+                                    <td class="w-20 right minw-60">
+                                        <i>F.Vec.</i>
+                                    </td>
+                                    <td class="w-20 right minw-60">
+                                        <i>Lote</i>
+                                    </td>
+                                    <td class="w-13 right minw-40">
+                                        <i>Act</i>
+                                    </td>
+                                    <td class="w-13 right minw-40">
+                                        <i>Cant</i>
+                                    </td>
+                                    <td class="w-14 right minw-60">
+                                        <table class="tablac w-100 right">
+                                            <tr>
+                                                <td rowspan="2" class="right w-90"><i>Costo</i></td>
+                                                <td class="center w-10 h-6 v-bottom">
+                                                    {% if operation_x == 'add' %}
+                                                    <img src="{% static '/img/pass/up1.jpg' %}" class="pointer" id="up_todo" onmousedown="cambiarUp('up_todo');" onmouseup="volverUp('up_todo');" onclick="aumentarCostoTodo();totalPedido();">
+                                                    {% else %}
+                                                    &nbsp;
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="center w-10 h-6 v-top">
+                                                    {% if operation_x == 'add' %}
+                                                    <img src="{% static '/img/pass/down1.jpg' %}" class="pointer" id="down_todo" onmousedown="cambiarDown('down_todo');" onmouseup="volverDown('down_todo');"
+                                                        onclick="disminuirCostoTodo();totalPedido();">
+                                                    {% else %}
+                                                    &nbsp;
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                    </td>
+                                    <td class="w-20 right minw-60">
+                                        <i>Total</i>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    {% if operation_x == 'add' %}
+                    {% for fila in filas %}
+                    <tr class="back{{forloop.counter|back_class}}" id="fila_{{fila}}" style="display: {% if forloop.counter == 1 %}display{% else %}none{% endif %};">
+                        <td class="w-40 left minw-140">
+                            <input type="hidden" name="producto_{{fila}}" id="producto_{{fila}}" value="0" />
+                            <input type="text" autocomplete="off" id="tb2_{{fila}}" name="tb2_{{fila}}" class="form-control input search left w-99" value="" onblur="validarFila('{{fila}}');" />
+                            <script type="text/javascript"> new autosuggest("tb2_{{fila}}", null, function (index, control) { seleccionP('{{fila}}', control.keywords[index], control.values[index]); }); 
+                            </script>
+                        </td>
+                        <td class="w-60 left">
+                            <div id="div_fila_{{fila}}">&nbsp;</div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    <tr class="back1">
+                        <td colspan="2" class="w-100 right">
+                            SubTotal : <input type="text" class="form-control input right w-20" name="total_pedido" id="total_pedido" readonly="readonly"> Bs.<br>
+                            
+                            &#37; Desc. <input type="text" autocomplete="off" class="form-control input right w-20" name="porcentaje_descuento" id="porcentaje_descuento" onkeyup="validarNumeroPunto(this); calcularPorcentajeDescuento(); totalPedido();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                            Desc. <input type="text" autocomplete="off" class="form-control input right w-20" name="descuento" id="descuento" onkeyup="validarNumeroPunto(this); totalPedido();"> Bs.<br>
+                            
+                            Total : <input type="text" class="form-control input right w-20" name="total_venta" id="total_venta" readonly="readonly"> Bs.
+                        </td>
+                    </tr>
+                    {% endif %}
+
+                    <tr class="back2">
+                        <td colspan="2" class="center w-100">&nbsp;</td>
+                    </tr>
+                    <tr class="back1">
+                        <td colspan="2" class="center w-100">
+                            {% if operation_x == "add" %}
+                            <input type="button" name="add_button" value="&nbsp;Guardar&nbsp;" class="btn btn-primary btn-sm" onclick="guardarVenta();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="hidden" name="add_x" value="acc">
+                            <input type="hidden" name="control_form" value="{{control_form}}">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="button" name="button_cancel" value="Cancelar" class="btn btn-primary btn-sm" onclick="cancelarVenta();">
+                            {% endif %}
+                            {% if operation_x == "anular" and puede_anular == 1 %}
+                            <input type="button" name="add_button" value="&nbsp;Anular&nbsp;" class="btn btn-primary btn-sm" onclick="confirmarAnular();">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="hidden" name="control_form" value="txt|2|S|motivo_anula|">
+                            <input type="hidden" name="anular_x" value="acc">
+                            <input type="hidden" name="id" value="{{id}}">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="button" name="button_cancel" value="Cancelar" class="btn btn-primary btn-sm" onClick="cancelForm();">
+                            {% endif %}
+                            <input type="hidden" id="url_main" value="{{url_main}}">
+                            <input type="hidden" id="url_add" value="{{url_add}}">
+                            <input type="hidden" id="operation_x" value="{{operation_x}}">
+                            <input type="hidden" id="id_null" value="">
+                            <input type="hidden" id="from_preventa" value="no">
+                            <input type="hidden" id="from_preventa_id" value="0">
+                            <input type="hidden" id="vender_fracciones" value="{{vender_fracciones}}">
+                            <input type="hidden" id="pedido_id" value="{{pedido_id}}">
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+        </form>
+        <br>
+        <br>
+        <br>
+        <br>
+    </div>
+    <!--fin div contenido-->
+    <div class="col-sm-2">&nbsp;</div>
+</div>
+<!--fin div contenedor-->
+<form name="form_cancel" method="post" action="{{url_main}}">
+    {% csrf_token %}
+</form>
+
+<form name="form_print" method="post" action="{{url_main}}" target="_blank">
+    {% csrf_token %}
+    <input type="hidden" name="operation_x" value="">
+    <input type="hidden" name="id" value="">
+</form>
+<form name="form_operation" method="post" action="{{url_main}}">
+    {% csrf_token %}
+    <input type="hidden" name="module_x" value="{{module_x}}">
+    <input type="hidden" name="module_x2" value="{{module_x2}}">
+    <input type="hidden" name="module_x3" value="{{module_x3}}">
+    
+    <input type="hidden" name="operation_x" value="{{operation_x}}">
+    <input type="hidden" name="operation_x2" value="{{operation_x2}}">
+    <input type="hidden" name="operation_x3" value="{{operation_x3}}">
+    
+    <input type="hidden" name="id" value="{{id}}">
+    <input type="hidden" name="id2" value="{{id2}}">
+    <input type="hidden" name="id3" value="{{id3}}">
+</form>

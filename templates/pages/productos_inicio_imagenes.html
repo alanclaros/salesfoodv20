@@ -1,0 +1,11 @@
+{% load static %}
+
+{% for producto_imagen in productos_imagenes %}
+<div class="carousel-item {% if forloop.counter == 1 %}active{% endif %}">
+    <img alt="item{{forloop.counter}}" class="img-fluid" src="{% static '/media/productos/' %}{{producto_imagen.imagen}}" />
+    <div class="carousel-caption">
+        <!-- <h3>Heading {{forloop.counter}}</h3>
+        <p>Slide {{forloop.counter}} description.</p> -->
+    </div>
+</div>
+{% endfor %}

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+{% load static %}
+{% load jinja_tags %}
+
+{% block title %} | Inicio {% endblock %}
+
+{% block js_modulo %}
+    {% if autenticado != 'si' %}
+    <script type="text/javascript" src="{% static "" %}js/home_page.js"></script>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+{% if autenticado == 'si' %}
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+{% else %}
+
+<!--cuadros-->
+<br>
+<table class="w-100">
+    <tr>
+        <td class="w-2">&nbsp;</td>
+        <td class="w-96 center">
+            {% for lista_fila in lista_lineas %}
+            <!--div contenedor-->
+            <div class="row w-100">
+                {% for linea in lista_fila %}
+                <!--columna 1-->
+                <div class="col-sm-4 center">
+                    {% if linea.linea != '' %}
+                    <div class="card w-100">
+                        <div class="card-body w-100 pointer" onclick="escogerLinea('{{linea.linea_id}}');">
+                            <div class="titulo_sucursal w-100 center">{% autoescape off %}{{linea.linea}}{% endautoescape %}</div>
+                            <div class="datos_sucursal w-100">
+                                {% if linea.imagen_thumb != '' %}
+                                <img src="{% static '/media/lineas/' %}{{linea.imagen_thumb}}">
+                                {% else %}
+                                <img src="{% static '/img/producto_sin_imagen.jpg' %}">
+                                {% endif %}
+                            </div>
+                            <div class="datos_sucursal w-100">
+                                {% autoescape off %}{{linea.descripcion}}{% endautoescape %}<br>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+            </div>
+            <!--fin div contenedor-->
+            {% endfor %}
+        </td>
+        <td class="w-2">&nbsp;</td>
+    </tr>
+</table>
+
+<form name="form_linea" method="POST" action="{{url_productos}}">
+    {% csrf_token %}
+    <input type="hidden" name="search_linea_x" value="acc">
+    <input type="hidden" name="linea" value="">
+</form>
+
+<!--pie de pagina-->
+{% include 'pages/pie_pagina.html' %}
+{% endif %}
+{% endblock %}

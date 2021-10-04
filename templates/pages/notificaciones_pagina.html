@@ -1,0 +1,21 @@
+{% load static %}
+
+{% if cantidad > 0 %}
+<a class="nav-link" data-toggle="dropdown" href="#">
+    <i class="far fa-bell notification_icon"></i>
+    <!-- <span class="badge badge-warning navbar-badge {% if cantidad_rojos > 0 %}notification_red{% else %}notification_normal{% endif %}">{{cantidad}}</span> -->
+    <span class="badge badge-{% if cantidad_rojos > 0 %}danger{% else %}success{% endif %} navbar-badge notification_normal">{{cantidad}}</span>
+</a>
+<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+    <span class="dropdown-item dropdown-header">{{cantidad}} Avisos</span>
+    {% for notif in notificaciones %}
+    <div class="dropdown-divider"></div>
+    <a href="{{notif.url}}" class="dropdown-item">
+        {% if notif.tipo == 'pedido' %}
+        <i class="fas fa-money-check mr-2 red"></i>
+        {% endif %}
+        <span class="float-right text-muted text-sm">{{notif.descripcion}}</span>
+    </a>
+    {% endfor %}
+</div>
+{% endif %}

@@ -1,0 +1,509 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+{% load static %}
+{% load jinja_tags %}
+
+{% block title %} | {{producto.producto}} {% endblock %}
+
+{% block meta %}
+<meta property="og:locale" content="es_ES" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="{{producto.producto}}" />
+<meta property="og:description" content="{{producto.descripcion}}" />
+<meta property="og:site_name" content="ntsoft-bolivia.com" />
+<meta property="og:image" content="https://ntsoft-bolivia.com{% static '/media/productos/' %}{{imagen1}}" />
+
+{% endblock %}
+
+{% block js_modulo %}
+<script type="text/javascript" src="{% static "" %}js/home_page.js"></script>
+{% endblock %}
+
+{% block content %}
+<style>
+    .container {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .carousel-inner img {
+        width: 100%;
+        height: 100%
+    }
+    
+    #custCarousel .carousel-indicators {
+        position: static;
+        margin-top: 20px
+    }
+    
+    #custCarousel .carousel-indicators>li {
+        width: 100px
+    }
+    
+    #custCarousel .carousel-indicators li img {
+        display: block;
+        opacity: 0.5
+    }
+    
+    #custCarousel .carousel-indicators li.active img {
+        opacity: 1
+    }
+    
+    #custCarousel .carousel-indicators li:hover img {
+        opacity: 0.75
+    }
+    
+    .carousel-item img {
+        width: 100%;
+    }
+    
+</style>
+<script>
+    
+</script>
+
+<br>
+<!--nuevo form de busqueda-->
+<div class="row">
+    <!-- DIRECT CHAT -->
+    <div class="card direct-chat direct-chat-primary collapsed-card w-98 center">
+        <div class="card-header">
+          <h3 class="card-title"><span id="span_producto" class="link_lineas">{% autoescape off %}{{txt_producto}}{% endautoescape %}</span><span class="link_lineas_no_over"> / {% autoescape off %}{{producto.producto}}{% endautoescape %}</span></h3>
+
+          <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <table class="w-100">
+                <tr>
+                    <td class="w-2">
+                        &nbsp;
+                    </td>
+                    <td class="w-98">
+                        <table class="table3 w-100">
+                            <tr class="back1">
+                                <td class="w-23 right">B&uacute;squeda :&nbsp;</td>
+                                <td class="w-77 left">
+                                    <input type="text" class="form-control input w-70 left" value="{{producto_session}}" name="producto_search" id="producto_search">
+                                    <input type="button" name="search_button" value="Buscar" class="btn btn-primary btn-sm" onclick="return buscarProducto();">
+                                </td>
+                            </tr>
+                            {% for linea in lista_lineas %}
+                            {% if linea_session == linea.linea_id %}
+                            <tr class="back{{forloop.counter|back_class}}">
+                                <td colspan="2" class="w-100 left">
+                                    {% autoescape off %}{{linea.espacios}}{% endautoescape %}&#45; <span class="link_productos_down">{{linea.linea}}</span>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr class="back{{forloop.counter|back_class}}">
+                                <td colspan="2" class="w-100 left">
+                                    {% autoescape off %}{{linea.espacios}}{% endautoescape %}&#45; <span class="link_productos pointer" onclick="escogerLinea('{{linea.linea_id}}');">{{linea.linea}}</span>
+                                </td>
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- /.card-body -->
+      </div>
+</div>
+
+<form name="form_producto" method="POST" action="{{url_main}}">
+    {% csrf_token %}
+    <input type="hidden" name="search_producto_x" value="acc">
+    <input type="hidden" name="producto" value="">
+</form>
+<form name="form_linea" method="POST" action="{{url_main}}">
+    {% csrf_token %}
+    <input type="hidden" name="search_linea_x" value="acc">
+    <input type="hidden" name="linea" value="">
+</form>
+<form name="form_operation" method="POST" action="{{url_main}}">
+    {% csrf_token %}
+    <input type="hidden" name="operation_x" value="">
+    <input type="hidden" name="id" value="">
+    <input type="hidden" name="url_main" value="{{url_main}}">
+</form>
+<form name="form_inicio" method="POST" action="{{url_index}}">
+    {% csrf_token %}
+</form>
+<form name="form_cart" method="POST" action="{{url_main}}">
+    {% csrf_token %}
+    <input type="hidden" name="operation_x" value="">
+    <input type="hidden" name="id" value="">
+    <input type="hidden" name="url_main" value="{{url_main}}">
+</form>
+<form name="form_detalle" method="GET" action="{{url_main}}">
+    <input type="hidden" name="id" value="">
+    <input type="hidden" name="producto" value="">
+</form>
+
+<!--cuadros-->
+<form name="formulario" method="POST" action="{{url_main}}" onsubmit="return false;">
+{% csrf_token %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="custCarousel" class="carousel slide" data-ride="carousel" data-interval="false" align="center">
+                        <!-- slides -->
+                        <div class="carousel-inner">
+                            {% for producto_imagen in productos_imagenes %}
+                            <div class="carousel-item {% if forloop.counter == 1 %}active{% endif %}"> <a href="{% static '/media/productos/' %}{{producto_imagen.imagen}}" class="zoom"><img src="{% static '/media/productos/' %}{{producto_imagen.imagen}}" ></a> </div>
+                            {% endfor %}
+                        </div> <!-- Left right --> <a class="carousel-control-prev" href="#custCarousel" data-slide="prev"> <span class="carousel-control-prev-icon"></span> </a> <a class="carousel-control-next" href="#custCarousel" data-slide="next"> <span class="carousel-control-next-icon"></span> </a> <!-- Thumbnails -->
+                        <ol class="carousel-indicators list-inline">
+                            {% for producto_imagen in productos_imagenes %}
+                            <li class="list-inline-item {% if forloop.counter == 1 %}active{% endif %}"> <a id="carousel-selector-{{forloop.counter|get_forloop_menos1}}" class="selected" data-slide-to="{{forloop.counter|get_forloop_menos1}}" data-target="#custCarousel"> <img src="{% static '/media/productos/' %}{{producto_imagen.imagen_thumb}}" class="img-fluid"> </a> </li>
+                            {% endfor %}
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <span class="espacio_carrusel_movil">&nbsp;</span><br>
+        <table class="w-100">
+            <tr>
+                <td class="w-5">&nbsp;</td>
+                <td class="w-95">
+                    <p class="detalle_titulo">{% autoescape off %}{{producto.producto}}{% endautoescape %}</p>
+                    <p class="detalle_subtitulo" id="txt_precio">{{producto.precio}} Bs.</p>
+                    <input type="hidden" id="costo_{{producto.producto_id}}" name="costo_{{producto.producto_id}}" value="{{producto.precio}}">
+                    <input type="hidden" id="costo_aux_{{producto.producto_id}}" name="costo_aux_{{producto.producto_id}}" value="{{producto.precio}}">
+                    <input type="hidden" id="total_{{producto.producto_id}}" name="total_{{producto.producto_id}}" value="{{producto.precio}}">
+                    
+                    <span class="detalle_lista"><b>Caracter&iacute;sticas:</b></span><br>
+                    <ul class="detalle_lista left">
+                        {% if producto.descripcion1 != '' %}
+                        <li>{% autoescape off %}{{producto.descripcion1}}{% endautoescape %}</li>
+                        {% endif %}
+                        {% if producto.descripcion2 != '' %}
+                        <li>{% autoescape off %}{{producto.descripcion2}}{% endautoescape %}</li>
+                        {% endif %}
+                        {% if producto.descripcion3 != '' %}
+                        <li>{% autoescape off %}{{producto.descripcion3}}{% endautoescape %}</li>
+                        {% endif %}
+                        {% if producto.descripcion4 != '' %}
+                        <li>{% autoescape off %}{{producto.descripcion4}}{% endautoescape %}</li>
+                        {% endif %}
+                        {% if producto.descripcion5 != '' %}
+                        <li>{% autoescape off %}{{producto.descripcion5}}{% endautoescape %}</li>
+                        {% endif %}
+                        {% if producto.descripcion6 != '' %}
+                        <li>{% autoescape off %}{{producto.descripcion6}}{% endautoescape %}</li>
+                        {% endif %}
+                        {% if producto.descripcion7 != '' %}
+                        <li>{% autoescape off %}{{producto.descripcion7}}{% endautoescape %}</li>
+                        {% endif %}
+                        {% if producto.descripcion8 != '' %}
+                        <li>{% autoescape off %}{{producto.descripcion8}}{% endautoescape %}</li>
+                        {% endif %}
+                        {% if producto.descripcion9 != '' %}
+                        <li>{% autoescape off %}{{producto.descripcion9}}{% endautoescape %}</li>
+                        {% endif %}
+                        {% if producto.descripcion10 != '' %}
+                        <li>{% autoescape off %}{{producto.descripcion10}}{% endautoescape %}</li>
+                        {% endif %}
+                    </ul>
+                    <br>
+                    
+                    {% if detalle_producto.lista_componentes or detalle_producto.lista_extras %}
+                    <p class="center">
+                        {% if detalle_producto.lista_componentes %}
+                        <button class="btn btn-primary" name="btn_ingredientes" onclick="componentesProductoHP('{{producto.producto_id}}');">
+                            <i class="nav-icon fas fa-clipboard-check"></i>&nbsp;&nbsp;Ingredientes
+                        </button>
+                        <br><br>
+                        {% endif %}
+                        {% if detalle_producto.lista_extras %}
+                        <button class="btn btn-primary" name="btn_extras" onclick="extrasProductoHP('{{producto.producto_id}}');">
+                            <i class="nav-icon fas fa-check-double"></i>&nbsp;&nbsp;Extras&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </button>
+                        {% endif %}
+                    </p>
+                    {% endif %}
+                    <br>
+                    <br>
+                    <input type="text" class="form-control input right w-10" id="cantidad_{{producto.producto_id}}" name="cantidad_{{producto.producto_id}}" autocomplete="off" value="1" onkeyup="{% if vender_fracciones == 'si' %}validarNumeroPunto(this);{% else %}validarNumero(this);{% endif %} totalPedidoVenta('{{producto.producto_id}}');">
+                    <input type="hidden" id="producto_nombre_{{producto.producto_id}}" name="producto_nombre_{{producto.producto_id}}" value="{{producto.producto}}">
+                    <input type="hidden" name="producto_id" value="{{producto.producto_id}}">
+                    <input type="hidden" name="operation_x" value="add_cart">
+                    &nbsp;<i class="nav-icon fas fa-cart-plus pointer carrito_cliente" onclick="return mostrarModalCompra('{{producto.producto_id}}', '{{producto.precio}}');">&nbsp;agregar al carrito</i><br>
+                </td>
+            </tr>
+        </table>
+        
+    </div>
+</div>
+
+<!--ingredientes y extras-->
+<div class="modal fade" id="modal-componentes-{{producto.producto_id}}">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">{{producto.producto}}</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <table class="tablab w-100">
+                <tr>
+                    <th class="w-100 left">
+                        Ingredientes
+                        {% for componente in detalle_producto.lista_componentes %}
+                        <input type="hidden" name="componente_{{producto.producto_id}}_{{componente.componente_id}}" value="{% if componente.defecto == 1 %}1{% else %}0{% endif %}">
+                        <input type="hidden" name="componente_nombre_{{producto.producto_id}}_{{componente.componente_id}}" value="{{componente.componente}}">
+                        {% endfor %}
+                        <input type="hidden" id="componentes_ids_{{producto.producto_id}}" value="{{detalle_producto.componentes_ids}}">
+                    </th>
+                </tr>
+                {% for componente in detalle_producto.lista_componentes %}
+                <tr class="back{{forloop.counter|back_class}}">
+                    <td class="left w-100">
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="aux_componente_{{producto.producto_id}}_{{componente.componente_id}}" value="1" onclick="marcarComponenteHP(this, 'componente_{{producto.producto_id}}_{{componente.componente_id}}');">
+                            <label for="aux_componente_{{producto.producto_id}}_{{componente.componente_id}}" class="custom-control-label">{{componente.componente}}</label>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            
+            <!--refrescos-->
+            <input type="hidden" id="refrescos_ids_{{producto.producto_id}}" value="{{detalle_producto.refresco_grupo_ids}}">
+            {% if detalle_producto.lista_refrescos %}
+            <table class="tablab w-100">
+                <tr>
+                    <th class="w-100 left">
+                        Refrescos
+                        {% for refresco in detalle_producto.lista_refrescos %}
+                        <input type="hidden" name="refresco_{{producto.producto_id}}_{{refresco.refresco_grupo_id}}" value="{% if refresco.defecto == 1 %}1{% else %}0{% endif %}">
+                        <input type="hidden" name="refresco_precio_{{producto.producto_id}}_{{refresco.refresco_grupo_id}}" value="{{refresco.precio}}">
+                        <input type="hidden" name="refresco_nombre_{{producto.producto_id}}_{{refresco.refresco_grupo_id}}" value="{% if refresco.insumo_id == 0 %}{{refresco.componente}}{% else %}{{refresco.insumo}}{% endif %}">
+                        {% endfor %}
+                    </th>
+                </tr>
+                {% for refresco in detalle_producto.lista_refrescos %}
+                <tr class="back{{forloop.counter|back_class}}">
+                    <td class="left w-100">
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="aux_refresco_{{producto.producto_id}}_{{refresco.refresco_grupo_id}}" value="1" onclick="marcarRefrescoHP(this, 'refresco_{{producto.producto_id}}_{{refresco.refresco_grupo_id}}', '{{producto.producto_id}}');">
+                            <label for="aux_refresco_{{producto.producto_id}}_{{refresco.refresco_grupo_id}}" class="custom-control-label">
+                                {% if refresco.insumo_id == 0 %}
+                                {{refresco.componente}}, {{refresco.precio}} Bs.
+                                {% else %}
+                                {{refresco.insumo}}, {{refresco.precio}} Bs.
+                                {% endif %}
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% endif %}
+            
+            <!--papas-->
+            <input type="hidden" id="papas_ids_{{producto.producto_id}}" value="{{detalle_producto.papa_grupo_ids}}">
+            {% if detalle_producto.lista_papas %}
+            <table class="tablab w-100">
+                <tr>
+                    <th class="w-100 left">
+                        Papas
+                        {% for papa in detalle_producto.lista_papas %}
+                        <input type="hidden" name="papa_{{producto.producto_id}}_{{papa.papa_grupo_id}}" value="{% if papa.defecto == 1 %}1{% else %}0{% endif %}">
+                        <input type="hidden" name="papa_precio_{{producto.producto_id}}_{{papa.papa_grupo_id}}" value="{{papa.precio}}">
+                        <input type="hidden" name="papa_nombre_{{producto.producto_id}}_{{papa.papa_grupo_id}}" value="{% if papa.insumo_id == 0 %}{{papa.componente}}{% else %}{{papa.insumo}}{% endif %}">
+                        {% endfor %}
+                        
+                    </th>
+                </tr>
+                {% for papa in detalle_producto.lista_papas %}
+                <tr class="back{{forloop.counter|back_class}}">
+                    <td class="left w-100">
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="aux_papa_{{producto.producto_id}}_{{papa.papa_grupo_id}}" value="1" onclick="marcarPapaHP(this, 'papa_{{producto.producto_id}}_{{papa.papa_grupo_id}}', '{{producto.producto_id}}');">
+                            <label for="aux_papa_{{producto.producto_id}}_{{papa.papa_grupo_id}}" class="custom-control-label">
+                                {% if papa.insumo_id == 0 %}
+                                {{papa.componente}}, {{papa.precio}} Bs.
+                                {% else %}
+                                {{papa.insumo}}, {{papa.precio}} Bs.
+                                {% endif %}
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% endif %}
+            
+        </div>
+        <div class="modal-footer right">
+          <button class="btn btn-secondary" data-dismiss="modal">
+            <i class="nav-icon fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;Cerrar
+        </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!--extras-->
+  <div class="modal fade" id="modal-extras-{{producto.producto_id}}">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">{{producto.producto}}</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <!--extras-->
+            <table class="tablab w-100">
+                <tr>
+                    <th class="w-100 left">
+                        Extras
+                        {% for extra in detalle_producto.lista_extras %}
+                        <input type="hidden" name="extra_{{producto.producto_id}}_{{extra.componente_id}}" value="0">
+                        <input type="hidden" name="extra_precio_{{producto.producto_id}}_{{extra.componente_id}}" value="{{extra.precio}}">
+                        <input type="hidden" name="extra_nombre_{{producto.producto_id}}_{{extra.componente_id}}" value="{{extra.componente}}">
+                        {% endfor %}
+                        <input type="hidden" id="extras_ids_{{producto.producto_id}}" value="{{detalle_producto.extras_ids}}">
+                    </th>
+                </tr>
+                {% for extra in detalle_producto.lista_extras %}
+                <tr class="back{{forloop.counter|back_class}}">
+                    <td class="left w-100">
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="aux_extra_{{producto.producto_id}}_{{extra.componente_id}}" value="1" onclick="marcarExtraHP(this, 'extra_{{producto.producto_id}}_{{extra.componente_id}}', '{{producto.producto_id}}');">
+                            <label for="aux_extra_{{producto.producto_id}}_{{extra.componente_id}}" class="custom-control-label">{{extra.componente}}, {{extra.precio}} Bs.</label>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="modal-footer right">
+            <button class="btn btn-secondary" data-dismiss="modal">
+                <i class="nav-icon fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;Cerrar
+            </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+  
+<!--productos relacionados-->
+<span class="espacio_carrusel">&nbsp;</span><br>
+<p class="detalle_titulo">Productos Relacionados :</p>
+
+<table class="w-100">
+    <tr>
+        <td class="w-2">&nbsp;</td>
+        <td class="w-96 center">
+            {% for lista_fila in productos_relacionados %}
+            <!--div contenedor-->
+            <div class="row w-100">
+                {% for producto in lista_fila %}
+                <!--columna 1-->
+                <div class="col-sm-4 center">
+                    {% if producto.linea != '' %}
+                    <div class="card w-100">
+                        <div class="card-body w-100 pointer" onclick="detalleProducto('{{producto.producto_id}}', '{{producto.producto}}');">
+                            <div class="titulo_sucursal w-100 center">{% autoescape off %}{{producto.producto}}{% endautoescape %}</div>
+                            <div class="datos_sucursal w-100">
+                                {% if producto.imagen_thumb != '' %}
+                                <img class="pointer" src="{% static '/media/productos/' %}{{producto.imagen_thumb}}">
+                                {% else %}
+                                <img class="pointer" src="{% static '/img/producto_sin_imagen.jpg' %}">
+                                {% endif %}
+                            </div>
+                            <div class="datos_sucursal w-100 pointer">
+                                <b>{{producto.codigo}}</b><br>
+                                {{producto.precio}} Bs.
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+            </div>
+            <!--fin div contenedor-->
+            {% endfor %}
+        </td>
+        <td class="w-2">&nbsp;</td>
+    </tr>
+</table>
+
+<!--compra de producto-->
+<div aria-hidden="true" aria-labelledby="compraLabel" class="modal fade" id="modalCompra" role="dialog" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="pull-left">Compra de Producto</div>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <table class="table3 w-100">
+                    <tr>
+                        <th colspan="3" class="left w-100">Producto</th>
+                    </tr>
+                    <tr class="back2">
+                        <td class="w-60 left">
+                            <span id="pedido_producto">nombre del producto</span>
+                        </td>
+                        
+                        <td class="w-15 right">
+                            <input type="text" class="form-control input right w-95" id="pedido_cantidad" value="1" autocomplete="off" maxlength="3" onkeyup="{% if vender_fracciones == 'si' %}validarNumeroPunto(this);{% else %}validarNumero(this);{% endif %}totalPedido();">
+                            <input type="hidden" id="pedido_precio" value="0">
+                            <input type="hidden" id="pedido_producto_id" value="">
+                        </td>
+                        <td class="w-25 right">
+                            <b><span id="pedido_total">1 Bs.</span></b>
+                        </td>
+                    </tr>
+                    <tr class="back1">
+                        <td class="w-100" colspan="3">&nbsp;</td>
+                    </tr>
+                    <tr class="back1">
+                        <td colspan="3" class="w-100 center">
+                            <button class="btn btn-primary btn-sm" id="add_cart" onclick="return agregarSeguir();">
+                                <i class="nav-icon fas fa-cart-plus"></i>&nbsp;&nbsp;Agregar y Seguir
+                            </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <button class="btn btn-primary btn-sm" id="add_cart2" onclick="return comprarAhora();">
+                                <i class="nav-icon fas fa-cart-arrow-down"></i>&nbsp;&nbsp;Comprar Ahora
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal">
+                    <i class="nav-icon fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;Cerrar
+                </button>
+            </div>
+            <!--end modal-content-->
+        </div>
+        <!--end modal-dialoge-->
+    </div>
+    <!--end myModal-->
+</div>
+
+<br><br><br><br><br><br>
+<!--pie de pagina-->
+{% include 'pages/pie_pagina.html' %}
+
+{% endblock %}

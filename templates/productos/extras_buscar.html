@@ -1,0 +1,37 @@
+{% load jinja_tags %}
+{% load static %}
+
+<table class="tablab w-100">
+    <tr>
+        <th class="w-50 left">
+            Extra
+        </th>
+        <th class="w-20 left">
+            Precio
+        </th>
+        <th class="w-20 left">
+            Pos
+        </th>
+        <th class="w-10 left">
+            &nbsp;
+        </th>
+    </tr>
+    {% for extra in extras %}
+    <tr class="back{{forloop.counter|back_class}}">
+        <td class="left w-50">
+            {{extra.componente}}
+        </td>
+        <td class="left w-20">
+            <input type="text" class="form-control input w-80 right" autocomplete="off" id="extra_precio_{{extra.componente_id}}" onkeyup="validarNumeroPunto(this);">
+        </td>
+        <td class="left w-20">
+            <input type="text" class="form-control input w-80 right" autocomplete="off" id="extra_pos_{{extra.componente_id}}" onkeyup="validarNumero(this);">
+        </td>
+        <td class="center w-10">
+            <input type="hidden" id="extra_nombre_{{extra.componente_id}}" value="{{extra.componente}}">
+            <img src="{% static 'img/png/activo.png' %}" class="ico_img pointer" onMouseOver=" overlib('seleccionar extra',CAPTION,'extra',WIDTH,'120',LEFT); return true" onMouseOut=" nd(); return true"
+                onclick="seleccionarExtra('{{extra.componente_id}}'); nd();">
+        </td>
+    </tr>
+    {% endfor %}
+</table>

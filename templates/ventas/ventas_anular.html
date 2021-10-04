@@ -1,0 +1,157 @@
+{% load static %}
+{% load jinja_tags %}
+
+<!--contenedor-->
+<div class="row align-items-center">
+    <div class="col-sm-2">&nbsp;</div>
+    <div class="col-md-8">
+        <!--contenido-->
+        <!--alerts-->
+        {% include 'partials/_alerts.html' %}
+        <br>
+        <div class="link_blue right">
+            <span class="link_blue pointer" onclick="backWindow();">Volver</span>
+        </div>
+        <br>
+        <form name="formulario" method="post" action="" onsubmit="return false;">
+            {% csrf_token %}
+            <table class="table3 w-100">
+                <tr>
+                    <th colspan="4" class="center w-100">
+                        Anular Venta
+                    </th>
+                </tr>
+
+                <tr class="back1">
+                    <td class="right w-20">
+                        Almacen&nbsp;:&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        {{venta.almacen_id.almacen}}
+                    </td>
+                    <td class="right w-20">
+                        Caja&nbsp;:&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        {{venta.caja_id.caja}}
+                    </td>
+                </tr>
+
+                <tr class="back2">
+                    <td class="right w-20">
+                        Venta&nbsp;:&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        {{venta.tipo_venta}}
+                    </td>
+                    <td class="right w-20">
+                        Precio&nbsp;:&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        {{venta.costo_abc}}
+                    </td>
+                </tr>
+
+                <tr class="back2">
+                    <td class="right w-20">
+                        Cliente&nbsp;:&nbsp;
+                    </td>
+                    <td colspan="3" class="left w-80">
+                        {{venta.apellidos}} {{venta.nombres}}, CI/NIT: {{venta.ci_nit}}
+                    </td>
+                </tr>
+
+                <tr class="back2">
+                    <td class="right w-20">
+                        Detalle&nbsp;:&nbsp;
+                    </td>
+                    <td colspan="3" class="left w-80">
+                        {% for detalle in detalles %}
+                        {{detalle.producto_id.producto}}, {{detalle.cantidad}} &#42; {{detalle.costo}} &#61; {{detalle.total}}<br>
+                        {% endfor %}
+                    </td>
+                </tr>
+
+                <tr class="back1">
+                    <td class="right w-20">
+                        Motivo&nbsp;:&nbsp;
+                    </td>
+                    <td colspan="3" class="left w-80">
+                        <input type="text" class="form-control input w-98" onkeyup="txtValid(this);" onblur="txtValid(this);" autocomplete="off" value="" maxlength="250" name="motivo_anula" id="motivo_anula">
+                    </td>
+                </tr>
+
+                <tr class="back1" id="fila_pp" {% if venta.tipo_venta == 'PLANPAGO' %}style="display: ;" {% else %}style="display: none;" {% endif %}>
+                    <td class="right w-20">
+                        <label>Cuotas : </label><br>
+                        {{plan_pago.numero_cuotas}}
+                    </td>
+                    <td colspan="3" class="left w-80">
+                        {% if plan_pago.mensual_dias == 'tipo_fecha' %}
+                        {{plan_pago.dia_mensual}} de mes
+                        {% else %}
+                        cada {{plan_pago.tiempo_dias}} dias
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <tr class="back2">
+                    <td colspan="4" class="left w-100">
+                        &nbsp;
+                    </td>
+                </tr>
+            </table>
+
+            <table class="table3 w-100">
+
+                <tr class="back2">
+                    <td colspan="2" class="center w-100">&nbsp;</td>
+                </tr>
+                <tr class="back1">
+                    <td colspan="2" class="center w-100">
+                        {% if operation_x == "anular" and puede_anular == 1 %}
+                        <button class="btn btn-secondary btn-sm" name="button_cancel" onclick="backWindow();">
+                            <i class="nav-icon fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;Cancelar
+                        </button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <button class="btn btn-danger btn-sm" name="add_button" onclick="return confirmarAnularGeneralVenta();">
+                            <i class="nav-icon far fa-times-circle"></i>&nbsp;&nbsp;Anular
+                        </button>
+                        <input type="hidden" name="control_form" value="txt|2|S|motivo_anula|">
+                        <input type="hidden" name="anular_x" value="acc">
+                        <input type="hidden" name="id" value="{{id}}">
+                        {% endif %}
+                        <input type="hidden" id="url_main" value="{{url_main}}">
+                        <input type="hidden" id="operation_x" name="operation_x" value="{{operation_x}}">
+                        <input type="hidden" name="module_x" value="{{module_x}}">
+                    </td>
+                </tr>
+
+            </table>
+        </form>
+        <br>
+        <br>
+        <br>
+        <br>
+    </div>
+    <!--fin div contenido-->
+    <div class="col-sm-2">&nbsp;</div>
+</div>
+<!--fin div contenedor-->
+<form name="form_cancel" method="post" action="{{url_main}}">
+    {% csrf_token %}
+</form>
+<form name="form_operation" method="post" action="{{url_main}}">
+    {% csrf_token %}
+    <input type="hidden" name="module_x" value="{{module_x}}">
+    <input type="hidden" name="module_x2" value="{{module_x2}}">
+    <input type="hidden" name="module_x3" value="{{module_x3}}">
+    
+    <input type="hidden" name="operation_x" value="{{operation_x}}">
+    <input type="hidden" name="operation_x2" value="{{operation_x2}}">
+    <input type="hidden" name="operation_x3" value="{{operation_x3}}">
+    
+    <input type="hidden" name="id" value="{{id}}">
+    <input type="hidden" name="id2" value="{{id2}}">
+    <input type="hidden" name="id3" value="{{id3}}">
+</form>

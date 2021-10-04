@@ -1,0 +1,668 @@
+{% load jinja_tags %}
+{% load static %}
+{% load humanize %}
+
+<!-- <script type="text/javascript" src="{% static "" %}js/{{js_file}}.js"></script> -->
+<!--contenedor-->
+<div class="row align-items-center">
+    <div class="col-sm-2">&nbsp;</div>
+    <div class="col-sm-8">
+        <!--contenido-->
+        <!--alerts-->
+        {% include 'partials/_alerts.html' %}
+        <br>
+        {% if puede_eliminar == 0 %}
+        <div class="alert alert-info alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h5><i class="icon fas fa-info"></i>Productos!</h5>
+            No puede Eliminar este producto, tiene registros en otros modulos, consulte con el administrador
+        </div>
+        <br>
+        {% endif %}
+        <div class="link_blue right">
+            <span class="link_blue pointer" onclick="backWindow();">Volver</span>
+        </div>
+        <br>
+        <form name="formulario" id="formulario" method="post" action="" onsubmit="return false;">
+            {% csrf_token %}
+            <table class="table3 w-100">
+                <tr>
+                    <th colspan="4" class="center w-100">
+                        {% if operation_copy == 'si' %}
+                        Copia de Produto
+                        {% else %}
+                        {% if operation_x == "add" %}Adicionar Producto{% endif %}
+                        {% if operation_x == "modify" %}Modificar Producto{% endif %}
+                        {% if operation_x == "delete" %}Eliminar Producto{% endif %}
+                        {% endif %}
+                    </th>
+                </tr>
+
+                <tr class="back1">
+                    <td class="right w-20">
+                        Linea&nbsp;:&nbsp;
+                    </td>
+                    <td colspan="3" class="left w-80">
+                        <select name="linea" id="linea" class="form-control h-35 input w-90 {% if operation_x == 'delete' %}readonly=" readonly"{% endif %}">
+                            {% for linea in lineas_lista %}
+                            <option value="{{linea.linea_id}}" {% if producto.linea_id == linea %}selected{% endif %}>{{linea.linea}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+
+                <tr class="back2">
+                    <td class="right w-20">
+                        Producto&nbsp;:&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        {% if operation_copy == 'si' %}
+                        <input type="text" autocomplete="off" class="form-control input left w-80" name="producto" id="producto" onkeyup="txtValid(this);" onblur="txtValid(this);" maxlength="250">
+                        {% else %}
+                        <input type="text" {% if operation_x == "delete" %}readonly="readonly" {% endif %} autocomplete="off" class="form-control input left w-80" {% autoescape off %} {{db_tags.producto}} {% endautoescape %}>
+                        {% endif %}
+                    </td>
+                    <td class="right w-20">
+                        C&oacute;digo&nbsp;:&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        {% if operation_copy == 'si' %}
+                        <input type="text" autocomplete="off" class="form-control input left w-80" name="codigo" id="codigo" onkeyup="txtValid(this);" onblur="txtValid(this);" maxlength="20">
+                        {% else %}
+                        <input type="text" {% if operation_x == "delete" %}readonly="readonly" {% endif %} autocomplete="off" class="form-control input left w-80" {% autoescape off %} {{db_tags.codigo}} {% endautoescape %}>
+                        {% endif %}
+                    </td>
+
+                </tr>
+
+                <tr class="back1">
+                    <td class="right w-20">
+                        Stock Minimo&nbsp;:&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <input type="text" {% if operation_x == "delete" %}readonly="readonly" {% endif %} autocomplete="off" class="form-control input left w-80" {% autoescape off %} {{db_tags.stock_minimo}} {% endautoescape %}>
+                    </td>
+                    <td class="right w-20">
+                        Activo&nbsp;:&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="activo" name="activo" value="Hello" {% if operation_x == 'add' %}checked{% endif %}
+                                {% if operation_x == 'modify' %}{% if producto.status_id_id == status_active %}checked{% endif %}{% endif %} {% if operation_x == 'delete' %}{% if producto.status_id_id == status_active %}checked{% endif %}
+                                disabled="disabled" {% endif %}>
+                            <label for="activo" class="custom-control-label">&nbsp;</label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="back2">
+                    <td class="right w-20">
+                        Unidad&nbsp;:&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <input type="text" {% if operation_x == "delete" %}readonly="readonly" {% endif %} autocomplete="off" class="form-control input left w-80" name="unidad" id="unidad" maxlength="20" value="{{producto.unidad}}"
+                            onkeyup="txtValid(this);" onblur="txtValid(this);">
+                    </td>
+                    <td class="right w-20">
+                        C. Barras&nbsp;:&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        {% if operation_copy == 'si' %}
+                        <input type="text" {% if operation_x == "delete" %}readonly="readonly" {% endif %} autocomplete="off" class="form-control input left w-80" name="codigo_barras" id="codigo_barras" maxlength="50" value="">
+                        {% else %}
+                        <input type="text" {% if operation_x == "delete" %}readonly="readonly" {% endif %} autocomplete="off" class="form-control input left w-80" name="codigo_barras" id="codigo_barras" maxlength="50" value="{{producto.codigo_barras}}">
+                        {% endif %}
+                    </td>
+                </tr>
+                
+                <!--insumos-->
+                <tr class="back1">
+                    <td colspan="4" class="w-100 left">
+                        <div id="lista_insumos">
+                            {% include 'productos/insumos_lista.html' %}
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="back2">
+                    <td colspan="4" class="w-100 left">
+                        <table class="table3 w-100">
+                            <tr>
+                                <th colspan="3" class="w-80 center h-25">
+                                    Buscar Insumos
+                                </th>
+                                <th class="w-20 right">
+                                    <img onclick="nd(); minimizarBusquedaInsumo();" class="ico_img pointer" src="{% static '/img/png/minimizar.png' %}" onMouseOver=" overlib('minimizar busqueda insumo',CAPTION,'Minimizar',WIDTH,'120',LEFT); return true"
+                                        onMouseOut=" nd(); return true">
+                                </th>
+                            </tr>
+                            <tr class="back1">
+                                <td class="w-30 left">
+                                    <input type="text" class="form-control search input w-80" id="in_insumo" placeholder="Insumo">
+                                </td>
+                                <td class="w-30 left">
+                                    <input type="text" class="form-control search input w-80" id="in_codigo" placeholder="Codigo">
+                                </td>
+                                <td class="w-20 left">
+                                    &nbsp;
+                                </td>
+                                <td class="w-20 left">
+                                    <input type="button" id="btn_buscar_insumo" class="btn btn-primary btn-xs btn_search" value="buscar" onclick="buscarInsumo();">
+                                </td>
+                            </tr>
+                            <tr class="back2">
+                                <td colspan="4" class="w-100 left">
+                                    <div id="div_busqueda_insumos">
+                                        <i>resultado busqueda</i>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                
+                <!--componentes-->
+                <tr class="back1">
+                    <td colspan="4" class="w-100 left">
+                        <div id="lista_componentes">
+                            {% include 'productos/componentes_lista.html' %}
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="back2">
+                    <td colspan="4" class="w-100 left">
+                        <table class="table3 w-100">
+                            <tr>
+                                <th colspan="3" class="w-80 center h-25">
+                                    Buscar Componente
+                                </th>
+                                <th class="w-20 right">
+                                    <img onclick="nd(); minimizarBusquedaComponente();" class="ico_img pointer" src="{% static '/img/png/minimizar.png' %}" onMouseOver=" overlib('minimizar busqueda componente',CAPTION,'Minimizar',WIDTH,'120',LEFT); return true"
+                                        onMouseOut=" nd(); return true">
+                                </th>
+                            </tr>
+                            <tr class="back1">
+                                <td class="w-30 left">
+                                    <input type="text" class="form-control search input w-80" id="co_componente" placeholder="Componente">
+                                </td>
+                                <td class="w-30 left">
+                                    <input type="text" class="form-control search input w-80" id="co_codigo" placeholder="Codigo">
+                                </td>
+                                <td class="w-20 left">
+                                    &nbsp;
+                                </td>
+                                <td class="w-20 left">
+                                    <input type="button" id="btn_buscar_componente" class="btn btn-primary btn-xs btn_search" value="buscar" onclick="buscarComponente();">
+                                </td>
+                            </tr>
+                            <tr class="back2">
+                                <td colspan="4" class="w-100 left">
+                                    <div id="div_busqueda_componentes">
+                                        <i>resultado busqueda</i>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                
+                <!--extras-->
+                <tr class="back1">
+                    <td colspan="4" class="w-100 left">
+                        <div id="lista_extras">
+                            {% include 'productos/extras_lista.html' %}
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="back2">
+                    <td colspan="4" class="w-100 left">
+                        <table class="table3 w-100">
+                            <tr>
+                                <th colspan="3" class="w-80 center h-25">
+                                    Buscar Extra
+                                </th>
+                                <th class="w-20 right">
+                                    <img onclick="nd(); minimizarBusquedaExtra();" class="ico_img pointer" src="{% static '/img/png/minimizar.png' %}" onMouseOver=" overlib('minimizar busqueda extra',CAPTION,'Minimizar',WIDTH,'120',LEFT); return true"
+                                        onMouseOut=" nd(); return true">
+                                </th>
+                            </tr>
+                            <tr class="back1">
+                                <td class="w-30 left">
+                                    <input type="text" class="form-control search input w-80" id="ex_extra" placeholder="Componente">
+                                </td>
+                                <td class="w-30 left">
+                                    <input type="text" class="form-control search input w-80" id="ex_codigo" placeholder="Codigo">
+                                </td>
+                                <td class="w-20 left">
+                                    &nbsp;
+                                </td>
+                                <td class="w-20 left">
+                                    <input type="button" id="btn_buscar_extra" class="btn btn-primary btn-xs btn_search" value="buscar" onclick="buscarExtra();">
+                                </td>
+                            </tr>
+                            <tr class="back2">
+                                <td colspan="4" class="w-100 left">
+                                    <div id="div_busqueda_extras">
+                                        <i>resultado busqueda</i>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                
+                <!--refrescos-->
+                <tr class="back1">
+                    <td colspan="4" class="w-100 left">
+                        <table class="table3 w-100">
+                            <tr>
+                                <th colspan="4" class="w-100 center h-25">
+                                    <div class="custom-control custom-checkbox">
+                                        <input class="custom-control-input" type="checkbox" id="check_refresco" name="check_refresco" value="Hello" onclick="listaRefresco();" {% if operation_x == 'add' %}{% endif %}
+                                            {% if operation_x == 'modify' %}{% if check_refresco > 0 %}checked{% endif %}{% endif %} 
+                                            {% if operation_x == 'delete' %}{% if check_refresco > 0 %}checked{% endif %} disabled="disabled" {% endif %}>
+                                        <label for="check_refresco" class="custom-control-label">Refrescos &nbsp;</label>
+                                    </div>
+                                </th>
+                            </tr>
+                        </table>
+                        <div id="div_lista_refrescos" style="display: {% if check_refresco > 0 %}{% else %}display{% endif %};">
+                        <table class="table3 w-100">
+                            {% for refresco in refrescos_lista %}
+                            <tr class="back{{forloop.counter|back_class}}">
+                                <td class="left w-70">
+                                    <div class="custom-control custom-checkbox">
+                                        <input class="custom-control-input" type="checkbox" id="check_refresco_{{refresco.refresco_grupo_id}}" name="check_refresco_{{refresco.refresco_grupo_id}}" value="Hello" {% if operation_x == 'add' %}{% endif %}
+                                            {% if operation_x == 'modify' %}{% if check_refresco > 0 %}checked{% endif %}{% endif %} 
+                                            {% if operation_x == 'delete' %}{% if check_refresco > 0 %}checked{% endif %} disabled="disabled" {% endif %}>
+                                        <label for="check_refresco_{{refresco.refresco_grupo_id}}" class="custom-control-label">{% if refresco.insumo_id == 0 %}{{refresco.componente}}{% else %}{{refresco.insumo}}{% endif %}</label>
+                                    </div>
+                                </td>
+                                <td class="left w-30">
+                                    <input type="text" class="form-control input right w-70" id="refresco_precio_{{refresco.refresco_grupo_id}}" name="refresco_precio_{{refresco.refresco_grupo_id}}" onkeyup="validarNumeroPunto(this);"> Bs.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            <tr class="back1">
+                                <td colspan="2" class="w-100">&nbsp;</td>
+                            </tr>
+                        </table>
+                        </div>
+                    </td>
+                </tr>
+                
+                <!--papas-->
+                <tr class="back1">
+                    <td colspan="4" class="w-100 left">
+                        <table class="table3 w-100">
+                            <tr>
+                                <th colspan="4" class="w-100 center h-25">
+                                    <div class="custom-control custom-checkbox">
+                                        <input class="custom-control-input" type="checkbox" id="check_papa" name="check_papa" value="Hello" onclick="listaPapa();" {% if operation_x == 'add' %}{% endif %}
+                                            {% if operation_x == 'modify' %}{% if check_papa > 0 %}checked{% endif %}{% endif %} 
+                                            {% if operation_x == 'delete' %}{% if check_papa > 0 %}checked{% endif %} disabled="disabled" {% endif %}>
+                                        <label for="check_papa" class="custom-control-label">Papas &nbsp;</label>
+                                    </div>
+                                </th>
+                            </tr>
+                        </table>
+                        <div id="div_lista_papas" style="display: {% if check_papa > 0 %}{% else %}display{% endif %};">
+                        <table class="table3 w-100">
+                            {% for papa in papas_lista %}
+                            <tr class="back{{forloop.counter|back_class}}">
+                                <td class="left w-70">
+                                    <div class="custom-control custom-checkbox">
+                                        <input class="custom-control-input" type="checkbox" id="check_papa_{{papa.papa_grupo_id}}" name="check_papa_{{papa.papa_grupo_id}}" value="Hello" {% if operation_x == 'add' %}{% endif %}
+                                            {% if operation_x == 'modify' %}{% if check_papa > 0 %}checked{% endif %}{% endif %} 
+                                            {% if operation_x == 'delete' %}{% if check_papa > 0 %}checked{% endif %} disabled="disabled" {% endif %}>
+                                        <label for="check_papa_{{papa.papa_grupo_id}}" class="custom-control-label">{% if papa.insumo_id == 0 %}{{papa.componente}}{% else %}{{papa.insumo}}{% endif %}</label>
+                                    </div>
+                                </td>
+                                <td class="left w-30">
+                                    <input type="text" class="form-control input right w-70" id="papa_precio_{{papa.papa_grupo_id}}" name="papa_precio_{{papa.papa_grupo_id}}" onkeyup="validarNumeroPunto(this);"> Bs.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            <tr class="back1">
+                                <td colspan="2" class="w-100">&nbsp;</td>
+                            </tr>
+                        </table>
+                        </div>
+                    </td>
+                </tr>
+                
+                <!--productos relacionados-->
+                <tr class="back1">
+                    <td colspan="4" class="w-100 left">
+                        <div id="lista_productos_relacionados">
+                            <table class="table3 w-100">
+                                <tr>
+                                    <th colspan="4" class="w-100 center h-25">Productos Relacionados</th>
+                                </tr>
+                                {% for prelacionado in productos_relacionados %}
+                                <tr class="back{{forloop.counter|back_class}}">
+                                    <td colspan="3" class="left w-80">
+                                        {{prelacionado.producto}}
+                                        <input type="hidden" name="productor_{{forloop.counter}}" value="{{prelacionado.producto_relacionado_id}}">
+                                    </td>
+                                    <td class="center w-20">
+                                        <img src="{% static '/img/png/delete.png' %}" class="ico_img pointer" onclick="quitarProductoRelacionado('{{prelacionado.producto_relacionado_id}}');">
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                <tr class="back1">
+                                    <td colspan="4" class="w-100">&nbsp;</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="back2">
+                    <td colspan="4" class="w-100 left">
+                        <table class="table3 w-100">
+                            <tr>
+                                <th colspan="3" class="w-80 center h-25">
+                                    Buscar Productos Relacionados
+                                </th>
+                                <th class="w-20 right">
+                                    <img onclick="nd(); minimizarBusquedaRelacionado();" class="ico_img pointer" src="{% static '/img/png/minimizar.png' %}" onMouseOver=" overlib('minimizar busqueda producto',CAPTION,'Minimizar',WIDTH,'120',LEFT); return true"
+                                        onMouseOut=" nd(); return true">
+                                </th>
+                            </tr>
+                            <tr class="back1">
+                                <td class="w-30 left">
+                                    <input type="text" class="form-control search input w-80" id="br_linea" placeholder="Linea">
+                                </td>
+                                <td class="w-30 left">
+                                    <input type="text" class="form-control search input w-80" id="br_producto" placeholder="Producto">
+                                </td>
+                                <td class="w-20 left">
+                                    <input type="text" class="form-control search input w-80" id="br_codigo" placeholder="Codigo">
+                                </td>
+                                <td class="w-20 left">
+                                    <input type="button" id="btn_buscar_relacionado" class="btn btn-primary btn-xs btn_search" value="buscar" onclick="buscarProductosRelacionados();">
+                                </td>
+                            </tr>
+                            <tr class="back2">
+                                <td colspan="4" class="w-100 left">
+                                    <div id="div_busqueda_relacionados">
+                                        <i>resultado busqueda</i>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                
+                <tr class="back1">
+                    <td colspan="4" class="left w-100">&nbsp;</td>
+                </tr>
+
+                <tr class="back2">
+                    <td class="right v-top w-20">
+                        <span id="label21">Descripci&oacute;n</span>&nbsp;:&nbsp;
+                        <input type="hidden" id="label21_c" value="Desc.">
+                        <br><br>
+                        Negrita &lt;b&gt;..&lt;&#47;b&gt;
+                        <br>
+                        Cursiva &lt;i&gt;..&lt;&#47;i&gt;
+                        <br>
+                        Subrrayado &lt;u&gt;..&lt;&#47;u&gt;
+                        <br>
+                        Tachado &lt;strike&gt;..&lt;&#47;strike&gt;
+                    </td>
+                    <td class="left w-30 v-top">
+                        <input type="text" autocomplete="off" value="{{producto.descripcion1}}" class="form-control input w-95" name="descripcion1" id="descripcion1" maxlength="250" {% if operation_x == "delete" %}readonly="readonly" {% endif %}
+                            onkeyup="crearDescripcion();"><br>
+                        <input type="text" autocomplete="off" value="{{producto.descripcion2}}" class="form-control input w-95" name="descripcion2" id="descripcion2" maxlength="250" {% if operation_x == "delete" %}readonly="readonly" {% endif %}
+                            onkeyup="crearDescripcion();"><br>
+                        <input type="text" autocomplete="off" value="{{producto.descripcion3}}" class="form-control input w-95" name="descripcion3" id="descripcion3" maxlength="250" {% if operation_x == "delete" %}readonly="readonly" {% endif %}
+                            onkeyup="crearDescripcion();"><br>
+                        <input type="text" autocomplete="off" value="{{producto.descripcion4}}" class="form-control input w-95" name="descripcion4" id="descripcion4" maxlength="250" {% if operation_x == "delete" %}readonly="readonly" {% endif %}
+                            onkeyup="crearDescripcion();"><br>
+                        <input type="text" autocomplete="off" value="{{producto.descripcion5}}" class="form-control input w-95" name="descripcion5" id="descripcion5" maxlength="250" {% if operation_x == "delete" %}readonly="readonly" {% endif %}
+                            onkeyup="crearDescripcion();"><br>
+                        <input type="text" autocomplete="off" value="{{producto.descripcion6}}" class="form-control input w-95" name="descripcion6" id="descripcion6" maxlength="250" {% if operation_x == "delete" %}readonly="readonly" {% endif %}
+                            onkeyup="crearDescripcion();"><br>
+                        <input type="text" autocomplete="off" value="{{producto.descripcion7}}" class="form-control input w-95" name="descripcion7" id="descripcion7" maxlength="250" {% if operation_x == "delete" %}readonly="readonly" {% endif %}
+                            onkeyup="crearDescripcion();"><br>
+                        <input type="text" autocomplete="off" value="{{producto.descripcion8}}" class="form-control input w-95" name="descripcion8" id="descripcion8" maxlength="250" {% if operation_x == "delete" %}readonly="readonly" {% endif %}
+                            onkeyup="crearDescripcion();"><br>
+                        <input type="text" autocomplete="off" value="{{producto.descripcion9}}" class="form-control input w-95" name="descripcion9" id="descripcion9" maxlength="250" {% if operation_x == "delete" %}readonly="readonly" {% endif %}
+                            onkeyup="crearDescripcion();"><br>
+                        <input type="text" autocomplete="off" value="{{producto.descripcion10}}" class="form-control input w-95" name="descripcion10" id="descripcion10" maxlength="250" {% if operation_x == "delete" %}readonly="readonly" {% endif %}
+                            onkeyup="crearDescripcion();"><br>
+                    </td>
+                    <td colspan="2" class="left w-50 v-top">
+                        <div id="datos_descripcion">
+
+                            {% autoescape off %} {{datos_descripcion}} {% endautoescape %}
+                        </div>
+                    </td>
+                </tr>
+
+                {% if productos_costos %}
+                <tr class="back1">
+                    <td colspan="4" class="w-100 left">
+                        <table class="table3 w-100">
+                            <tr>
+                                <th colspan="4" class="w-100 center h-25">
+                                    Costo en Inventarios
+                                </th>
+                            </tr>
+                            <tr class="back2">
+                                <td class="w-25 right">
+                                    &nbsp;
+                                </td>
+                                <td class="w-25 right">
+                                    <i>Costo A&nbsp;&nbsp;</i>
+                                </td>
+                                <td class="w-25 right">
+                                    <i>Costo B&nbsp;&nbsp;</i>
+                                </td>
+                                <td class="w-25 right">
+                                    <i>Costo C&nbsp;&nbsp;</i>
+                                </td>
+                            </tr>
+                            <tr class="back1">
+                                <td class="w-25 right">
+                                    &nbsp;
+                                </td>
+                                <td class="w-25 right">
+                                    <input type="text" autocomplete="off" value="{{producto.costo_a}}" class="form-control input w-60 right" name="costo_a" id="costo_a" onkeyup="validarNumeroPunto(this);"> Bs.
+                                </td>
+                                <td class="w-25 right">
+                                    <input type="text" autocomplete="off" value="{{producto.costo_b}}" class="form-control input w-60 right" name="costo_b" id="costo_b" onkeyup="validarNumeroPunto(this);"> Bs.
+                                </td>
+                                <td class="w-25 right">
+                                    <input type="text" autocomplete="off" value="{{producto.costo_c}}" class="form-control input w-60 right" name="costo_c" id="costo_c" onkeyup="validarNumeroPunto(this);"> Bs.
+                                </td>
+                            </tr>
+                            <tr class="back2">
+                                <td colspan="4" class="w-100 left">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                {% else %}
+                <input type="hidden" name="costo_a" id="costo_a" value="">
+                <input type="hidden" name="costo_b" id="costo_b" value="">
+                <input type="hidden" name="costo_c" id="costo_c" value="">
+                {% endif %}
+
+                <tr class="back1">
+                    <td colspan="4" class="w-100 left">
+                        <table class="table3 w-100">
+                            <tr>
+                                <th class="w-25 right h-25">
+                                    &nbsp;
+                                </th>
+                                <th class="w-25 right h-25">
+                                    Precio {% if produtos_precios_abc %}A{% endif %}
+                                </th>
+                                <th class="w-25 right h-25">
+                                    {% if produtos_precios_abc %}Precio B{% endif %}
+                                </th>
+                                <th class="w-25 right h-25">
+                                    {% if produtos_precios_abc %}Precio C{% endif %}
+                                </th>
+                            </tr>
+                            <tr class="back1">
+                                <td class="w-25 right">
+                                    Normal :&nbsp;
+                                </td>
+                                <td class="w-25 right">
+                                    <input type="text" autocomplete="off" value="{{producto.precio_a}}" class="form-control input w-60 right" name="precio_a" id="precio_a" onkeyup="validarNumeroPunto(this); setPrecioA();"> Bs.
+                                </td>
+                                <td class="w-25 right">
+                                    {% if produtos_precios_abc %}
+                                    <input type="text" autocomplete="off" value="{{producto.precio_b}}" class="form-control input w-60 right" name="precio_b" id="precio_b" onkeyup="validarNumeroPunto(this); setPrecioB();"> Bs.
+                                    {% else %}
+                                    <input type="hidden" name="precio_b" id="precio_b" value="">
+                                    {% endif %}
+                                </td>
+                                <td class="w-25 right">
+                                    {% if produtos_precios_abc %}
+                                    <input type="text" autocomplete="off" value="{{producto.precio_c}}" class="form-control input w-60 right" name="precio_c" id="precio_c" onkeyup="validarNumeroPunto(this); setPrecioC();"> Bs.
+                                    {% else %}
+                                    <input type="hidden" name="precio_c" id="precio_c" value="">
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr class="back1">
+                                <td class="w-25 right">
+                                    Factura :&nbsp;
+                                </td>
+                                <td class="w-25 right">
+                                    <input type="text" autocomplete="off" value="{{producto.precio_a_factura}}" class="form-control input w-60 right" name="precio_a_factura" id="precio_a_factura" onkeyup="validarNumeroPunto(this);"> Bs.
+                                </td>
+                                <td class="w-25 right">
+                                    {% if produtos_precios_abc %}
+                                    <input type="text" autocomplete="off" value="{{producto.precio_b_factura}}" class="form-control input w-60 right" name="precio_b_factura" id="precio_b_factura" onkeyup="validarNumeroPunto(this);"> Bs.
+                                    {% else %}
+                                    <input type="hidden" name="precio_b_factura" id="precio_b_factura" value="">
+                                    {% endif %}
+                                </td>
+                                <td class="w-25 right">
+                                    {% if produtos_precios_abc %}
+                                    <input type="text" autocomplete="off" value="{{producto.precio_c_factura}}" class="form-control input w-60 right" name="precio_c_factura" id="precio_c_factura" onkeyup="validarNumeroPunto(this);"> Bs.
+                                    {% else %}
+                                    <input type="hidden" name="precio_c_factura" id="precio_c_factura" value="">
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr class="back1">
+                                <td class="w-25 right">
+                                    Consig. :&nbsp;
+                                </td>
+                                <td class="w-25 right">
+                                    <input type="text" autocomplete="off" value="{{producto.precio_a_consignacion}}" class="form-control input w-60 right" name="precio_a_consignacion" id="precio_a_consignacion" onkeyup="validarNumeroPunto(this);"> Bs.
+                                </td>
+                                <td class="w-25 right">
+                                    {% if produtos_precios_abc %}
+                                    <input type="text" autocomplete="off" value="{{producto.precio_b_consignacion}}" class="form-control input w-60 right" name="precio_b_consignacion" id="precio_b_consignacion" onkeyup="validarNumeroPunto(this);"> Bs.
+                                    {% else %}
+                                    <input type="hidden" name="precio_b_consignacion" id="precio_b_consignacion" value="">
+                                    {% endif %}
+                                </td>
+                                <td class="w-25 right">
+                                    {% if produtos_precios_abc %}
+                                    <input type="text" autocomplete="off" value="{{producto.precio_c_consignacion}}" class="form-control input w-60 right" name="precio_c_consignacion" id="precio_c_consignacion" onkeyup="validarNumeroPunto(this);"> Bs.
+                                    {% else %}
+                                    <input type="hidden" name="precio_c_consignacion" id="precio_c_consignacion" value="">
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr class="back1">
+                                <td class="w-25 right">
+                                    Plan Pago :&nbsp;
+                                </td>
+                                <td class="w-25 right">
+                                    <input type="text" autocomplete="off" value="{{producto.precio_a_pp}}" class="form-control input w-60 right" name="precio_a_pp" id="precio_a_pp" onkeyup="validarNumeroPunto(this);"> Bs.
+                                </td>
+                                <td class="w-25 right">
+                                    {% if produtos_precios_abc %}
+                                    <input type="text" autocomplete="off" value="{{producto.precio_b_pp}}" class="form-control input w-60 right" name="precio_b_pp" id="precio_b_pp" onkeyup="validarNumeroPunto(this);"> Bs.
+                                    {% else %}
+                                    <input type="hidden" name="precio_b_pp" id="precio_b_pp" value="">
+                                    {% endif %}
+                                </td>
+                                <td class="w-25 right">
+                                    {% if produtos_precios_abc %}
+                                    <input type="text" autocomplete="off" value="{{producto.precio_c_pp}}" class="form-control input w-60 right" name="precio_c_pp" id="precio_c_pp" onkeyup="validarNumeroPunto(this);"> Bs.
+                                    {% else %}
+                                    <input type="hidden" name="precio_c_pp" id="precio_c_pp" value="">
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr class="back2">
+                    <td colspan="4" class="center w-100">&nbsp;</td>
+                </tr>
+                <tr class="back1">
+                    <td colspan="4" class="center w-100">
+                        {% if operation_x == "add" %}
+                        <input type="button" name="add_button" id="add_button" value="&nbsp;Guardar&nbsp;" class="btn btn-primary btn-sm" onclick="mandarFormularioProducto('add', 'add_x', 'formulario', 'add_button', 'button_cancel');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="hidden" name="add_x" value="acc">
+                        <input type="hidden" name="control_form" value="{{control_form}}">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="button" name="button_cancel" value="Cancelar" class="btn btn-primary btn-sm" onClick="backWindow();">
+                        {% endif %}
+                        {% if operation_x == "modify" %}
+                        <input type="button" name="add_button" value="&nbsp;Guardar&nbsp;" class="btn btn-primary btn-sm" onclick="mandarFormularioProducto('modify', 'modify_x', 'formulario', 'add_button', 'button_cancel')">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="hidden" name="modify_x" value="acc">
+                        <input type="hidden" name="control_form" value="{{control_form}}">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="button" name="button_cancel" value="Cancelar" class="btn btn-primary btn-sm" onClick="backWindow();">
+                        {% endif %}
+                        {% if operation_x == "delete" and puede_eliminar == 1 %}
+                        <input type="button" name="add_button" value="&nbsp;Eliminar&nbsp;" class="btn btn-primary btn-sm" onclick="confirmarEliminarProducto();">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="hidden" name="delete_x" value="acc">
+                        <input type="hidden" name="control_form" value="{{control_form}}">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="button" name="button_cancel" value="Cancelar" class="btn btn-primary btn-sm" onClick="backWindow();">
+                        {% endif %}
+                        <input type="hidden" id="url_main" value="{{url_main}}">
+                        <input type="hidden" name='operation_x' id="operation_x" value="{{operation_x}}">
+                        <input type="hidden" name="operation_copy" value="{{operation_copy}}">
+                        <input type="hidden" id="pid" value="{{producto.producto_id}}">
+                        <input type="hidden" id="refrescos_ids" value="{{refrescos_ids}}">
+                        <input type="hidden" id="papas_ids" value="{{papas_ids}}">
+                        <input type="hidden" name="module_x" value="{{module_x}}">
+                    </td>
+                </tr>
+
+            </table>
+        </form>
+        <br>
+    </div>
+    <!--fin div contenido-->
+    <div class="col-sm-2">&nbsp;</div>
+</div>
+<!--fin div contenedor-->
+<form name="form_cancel" method="post" action="{{url_main}}">
+    {% csrf_token %}
+</form>
+<form name="form_operation" method="post" action="{{url_main}}">
+    {% csrf_token %}
+    <input type="hidden" name="module_x" value="{{module_x}}">
+    <input type="hidden" name="module_x2" value="{{module_x2}}">
+    <input type="hidden" name="module_x3" value="{{module_x3}}">
+    
+    <input type="hidden" name="operation_x" value="{{operation_x}}">
+    <input type="hidden" name="operation_x2" value="{{operation_x2}}">
+    <input type="hidden" name="operation_x3" value="{{operation_x3}}">
+    
+    <input type="hidden" name="id" value="{{id}}">
+    <input type="hidden" name="id2" value="{{id2}}">
+    <input type="hidden" name="id3" value="{{id3}}">
+</form>

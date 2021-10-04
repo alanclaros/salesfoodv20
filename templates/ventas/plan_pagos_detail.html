@@ -1,0 +1,266 @@
+{% load jinja_tags %}
+{% load static %}
+
+<div class="row align-items-center">
+    <div class="col-sm-2">&nbsp;</div>
+    <div class="col-sm-8">
+        <!--div contenedor-->
+        <br>
+        <div class="link_blue right">
+            <span class="link_blue pointer" onclick="backWindow();">Volver</span>
+        </div>
+        <br>
+        <!--alerts-->
+        {% include 'partials/_alerts.html' %}
+
+
+        <table class="table3 w-100">
+            <tr>
+                <th class="w-100 center" colspan="4">
+                    Plan de Pago
+                    {% if permisos.imprimir %}
+                    &nbsp;<img class="ico_img pointer" src="{% static '/img/png/impresora.png' %}" onclick="imprimirPlanPagosPlanP('{{plan_pago.plan_pago_id}}');">
+                    {% endif %}
+                </th>
+            </tr>
+
+            <tr class="back2">
+                <td class="right w-20">
+                    Plan Pago&nbsp;:&nbsp;
+                </td>
+                <td class="left w-30">
+                    {{plan_pago.plan_pago_id}} ({{plan_pago.numero_cuotas}} Cuotas)
+                </td>
+                <td class="right w-20">
+                    Fecha :&nbsp;
+                </td>
+                <td class="left w-30">
+                    {{plan_pago.fecha|fecha_mostrar:'dd-MMM-yyyy'}}
+                </td>
+            </tr>
+
+            <tr class="back1">
+                <td class="right w-20">
+                    Tipo :&nbsp;
+                </td>
+                <td class="left w-30">
+                    {% if plan_pago.mensual_dias == 'tipo_fecha' %}
+                    Fecha Fija ({{plan_pago.dia_mensual}})
+                    {% else %}
+                    D&iacute;as ({{plan_pago.tiempo_dias}})
+                    {% endif %}
+                    <b>{{plan_pago.monto_total}} Bs.</b>
+                </td>
+                <td class="right w-20">
+                    Saldo :&nbsp;
+                </td>
+                <td class="left w-30">
+                    {{plan_pago.saldo}} Bs.
+                </td>
+            </tr>
+
+            <tr class="back2">
+                <td class="right w-20">
+                    Concepto&nbsp;:&nbsp;
+                </td>
+                <td colspan="3" class="left w-80">
+                    {{plan_pago.concepto}}
+                </td>
+            </tr>
+        </table>
+        <br>
+
+        <table class="table3 w-100">
+            <tr>
+                <th class="center w-18">
+                    Cuota
+                </th>
+                <th class="w-36">
+                    Fecha
+                </th>
+                <th class="w-23 right">
+                    Monto
+                </th>
+                <th class="w-23 right">
+                    Saldo
+                </th>
+            </tr>
+            {% for detalle in detalles %}
+            <tr class="back{{forloop.counter|back_class_color:detalle.status_id.status_id}}">
+                <td class="center w-18">
+                    {{detalle.numero_cuota}}
+                </td>
+                <td class="left w-36">
+                    {{detalle.fecha|fecha_mostrar:'dd-MMM-yyyy'}}
+                </td>
+                <td class="right w-23">
+                    {{detalle.monto}} Bs.
+                </td>
+                <td class="right w-23">
+                    {{detalle.saldo}} Bs.
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <br>
+
+        <table class="table3 w-100">
+            <tr>
+                <th colspan="5" class="center w-100">
+                    Pagos Realizados
+                    {% if permisos.imprimir %}
+                    &nbsp;<img class="ico_img pointer" src="{% static '/img/png/impresora.png' %}" onclick="imprimirPagosPlanP('{{plan_pago.plan_pago_id}}');">
+                    {% endif %}
+                </th>
+            </tr>
+            <tr>
+                <th class="w-35">
+                    Fecha
+                </th>
+                <th class="w-25 right">
+                    Monto
+                </th>
+                <th colspan="3" class="w-40 center">
+                    Saldo
+                </th>
+            </tr>
+            {% for pago in pagos %}
+            <tr class="back{{forloop.counter|back_class_color:pago.status_id.status_id}}">
+                <td class="left w-35">
+                    {{pago.fecha|fecha_mostrar:'dd-MMM-yyyy'}}
+                </td>
+                <td class="right w-25">
+                    {{pago.monto}} Bs.
+                </td>
+                <td class="right w-30">
+                    {{pago.saldo}} Bs.
+                </td>
+                <td class="center w-5">
+                    {% if permisos.imprimir %}
+                    <img class="ico_img pointer" src="{% static '/img/png/impresora.png' %}" onclick="imprimirCuotaPlanP('{{pago.plan_pago_pago_id}}');">
+                    {% endif %}
+                </td>
+                <td class="center w-5">
+                    {% if permisos.anular %}
+                    {% if pago.status_id.status_id != estado_anulado %}
+                    <img class="ico_img pointer" src="{% static '/img/png/anular.png' %}" onclick="anularCuotaPlanP('{{plan_pago.plan_pago_id}}', '{{pago.plan_pago_pago_id}}');">
+                    {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+            <tr class="back1" style="display: none;" id="fila_anular_{{pago.plan_pago_pago_id}}">
+                <td colspan="5" class="left w-100">
+                    <table class="table3 w-100 left">
+                        <td class="back1 right w-20">
+                            Motivo :&nbsp;
+                        </td>
+                        <td class="back1 left w-80">
+                            <input type="text" autocomplete="off" class="form-control input w-60 left" name="motivo_anula_{{pago.plan_pago_pago_id}}" id="motivo_anula_{{pago.plan_pago_pago_id}}">&nbsp;
+                            <input type="button" class="btn btn-primary btn-xs" value="Anular" onclick="return confirmarAnularPlanP('{{plan_pago.plan_pago_id}}', '{{pago.plan_pago_pago_id}}');">&nbsp;
+                            <input type="button" class="btn btn-primary btn-xs" value="Cancelar" onclick="return cancelarAnularPlanP('{{pago.plan_pago_pago_id}}');">
+                        </td>
+                    </table>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <br>
+        {% if plan_pago.saldo > 0 %}
+        <form name="formulario" method="post" action="" onsubmit="return false;">
+            {% csrf_token %}
+            <table class="table3 w-100">
+                <tr>
+                    <th colspan="4" class="center w-100">
+                        Nuevo Pago
+                    </th>
+                </tr>
+
+                <tr class="back1">
+                    <td class="right w-20">
+                        Fecha :&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        {{fecha_actual}}
+                    </td>
+                    <td class="right w-20">
+                        Saldo :&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        {{plan_pago.saldo}} Bs.
+                    </td>
+                </tr>
+
+                <tr class="back2">
+                    <td class="right w-20">
+                        Monto :&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <input type="text" autocomplete="off" class="form-control input right w-60" name="monto" id="monto" value="" onkeyup="validarNumeroPunto(this); txtValid(this);" onblur="txtValid(this);"> Bs.
+                    </td>
+                    <td class="right w-20">
+                        Caja :&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <select name="caja" id="caja" class="form-control input w-90 h-35">
+                            <option value="{{caja_usuario.caja_id}}">{{caja_usuario.caja}}</option>
+                        </select>
+                    </td>
+                </tr>
+
+                <tr class="back1">
+                    <td class="right w-20">
+                        Obs. :&nbsp;
+                    </td>
+                    <td colspan="3" class="left w-80">
+                        <input type="text" autocomplete="off" class="form-control input left w-90" name="observacion" id="observacion" value="" onkeyup="txtValid(this);" onblur="txtValid(this);">
+                    </td>
+                </tr>
+
+                <tr class="back2">
+                    <td colspan="4" class="center w-100">
+                        <button class="btn btn-primary btn-sm" name="add_button" onclick="return cobroCuotaPlanP();">
+                            <i class="nav-icon fas fa-save"></i>&nbsp;&nbsp;Cobrar
+                        </button>
+                        
+                        <input type="hidden" name="cobrar_cuota_x" value="acc">
+                        <input type="hidden" name="id" value="{{plan_pago.plan_pago_id}}">
+                        <input type="hidden" id="plan_pago_saldo" value="{{plan_pago.saldo}}">
+                        <input type="hidden" name="module_x" value="{{module_x}}">
+                        <input type="hidden" name="operation_x" value="{{operation_x}}">
+                    </td>
+                </tr>
+
+            </table>
+            <br>
+        </form>
+        {% endif %}
+    </div>
+    <!--fin div contenedor-->
+    <div class="col-sm-2">&nbsp;</div>
+</div>
+
+<BR><BR>
+<form name="form_operation" method="post" action="{{url_main}}">
+    {% csrf_token %}
+    <input type="hidden" name="module_x" value="{{module_x}}">
+    <input type="hidden" name="module_x2" value="{{module_x2}}">
+    <input type="hidden" name="module_x3" value="{{module_x3}}">
+    
+    <input type="hidden" name="operation_x" value="{{operation_x}}">
+    <input type="hidden" name="operation_x2" value="{{operation_x2}}">
+    <input type="hidden" name="operation_x3" value="{{operation_x3}}">
+    
+    <input type="hidden" name="id" value="{{id}}">
+    <input type="hidden" name="id2" value="{{id2}}">
+    <input type="hidden" name="id3" value="{{id3}}">
+    
+    <input type="hidden" name="motivo_anula" value="">
+</form>
+    
+<form name="form_print" method="post" action="{{url_main}}" target="_blank">
+    {% csrf_token %}
+    <input type="hidden" name="module_x" value="{{module_x}}">
+    <input type="hidden" name="operation_x" value="">
+    <input type="hidden" name="id" value="">
+</form>
+</div>

@@ -1,0 +1,347 @@
+{% load jinja_tags %}
+{% load static %}
+
+<script type="text/javascript" src="{% static "" %}js/{{js_file}}.js"></script>
+<!-- InputMask -->
+<script src="{% static 'plugins/moment/moment.min.js' %}"></script>
+<script src="{% static 'plugins/inputmask/min/jquery.inputmask.bundle.min.js' %}"></script>
+
+<!-- Page script -->
+<script>
+    $(function () {
+        //Datemask dd/mm/yyyy
+        $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+        $('[data-mask]').inputmask()
+    })
+</script>
+
+{% if operation_x == 'add' %}
+<link rel="stylesheet" href="{% static 'js/autosuggest/autosuggest.css' %}">
+<script type="text/javascript" src="{% static "" %}js/autosuggest/autosuggest.js"></script>
+<!-- Autosuggest data: -->
+<script type="text/javascript">
+    var suggest_custom_array_2 = [];
+    var precio_a = [];
+    var precio_b = [];
+    var precio_c = [];
+    var precio_a_factura = [];
+    var precio_b_factura = [];
+    var precio_c_factura = [];
+    var precio_a_consignacion = [];
+    var precio_b_consignacion = [];
+    var precio_c_consignacion = [];
+    var precio_a_pp = [];
+    var precio_b_pp = [];
+    var precio_c_pp = [];
+    {% for producto in lista_productos %}
+    suggest_custom_array_2.push(['{{producto.producto}}', '{{producto.producto_id}}']);
+    precio_a['{{producto.producto_id}}'] = '{{producto.precio_a}}';
+    precio_b['{{producto.producto_id}}'] = '{{producto.precio_b}}';
+    precio_c['{{producto.producto_id}}'] = '{{producto.precio_c}}';
+    precio_a_factura['{{producto.producto_id}}'] = '{{producto.precio_a_factura}}';
+    precio_b_factura['{{producto.producto_id}}'] = '{{producto.precio_b_factura}}';
+    precio_c_factura['{{producto.producto_id}}'] = '{{producto.precio_c_factura}}';
+    precio_a_consignacion['{{producto.producto_id}}'] = '{{producto.precio_a_consignacion}}';
+    precio_b_consignacion['{{producto.producto_id}}'] = '{{producto.precio_b_consignacion}}';
+    precio_c_consignacion['{{producto.producto_id}}'] = '{{producto.precio_c_consignacion}}';
+    precio_a_pp['{{producto.producto_id}}'] = '{{producto.precio_a_pp}}';
+    precio_b_pp['{{producto.producto_id}}'] = '{{producto.precio_b_pp}}';
+    precio_c_pp['{{producto.producto_id}}'] = '{{producto.precio_c_pp}}';
+    {% endfor %}
+</script>
+{% endif %}
+
+<!--contenedor-->
+<div class="row align-items-center">
+    <div class="col-sm-2">&nbsp;</div>
+    <div class="col-md-8">
+        <!--contenido-->
+        <!--alerts-->
+        {% include 'partials/_alerts.html' %}
+        <br>
+        {% if puede_anular == 0 %}
+        <div class="alert alert-info alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h5><i class="icon fas fa-info"></i>Pedidos Almacen!</h5>
+            No puede Anular este pedido, tiene registros en otros modulos, consulte con el administrador
+        </div>
+        <br>
+        {% endif %}
+        <div class="link_blue right">
+            <span class="link_blue pointer" onclick="backWindow();">Volver</span>
+        </div>
+        <br>
+        <form name="formulario" method="post" action="" onsubmit="return false;">
+            {% csrf_token %}
+            <table class="table3 w-100">
+                <tr>
+                    <th colspan="4" class="center w-100">
+                        {% if operation_x == "add" %}Adicionar Pedido Almacen{% endif %}
+                        {% if operation_x == "anular" %}Anular Pedido Almacen{% endif %}
+                    </th>
+                </tr>
+
+                <tr class="back1">
+                    <td class="right w-20">
+                        Almacen&nbsp;:&nbsp;
+                    </td>
+                    <td colspan="3" class="left w-80">
+                        <select name="almacen" id="almacen" class="form-control input w-90 h-35" {% if operation_x == 'anular' %}readonly='readonly' {% else %}onchange="seleccionAlmacenPA();" {% endif %}>
+                            <option value="0">---</option>
+                            {% for almacen in lista_almacenes %}
+                            <option value="{{almacen.almacen_id}}" {% if registro.almacen_id.almacen_id == almacen.almacen_id %}selected{% endif %}>{{almacen.sucursal_id.sucursal}}-{{almacen.almacen}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+
+                <tr class="back2">
+                    <td class="right w-20">
+                        Destino&nbsp;:&nbsp;
+                    </td>
+                    <td colspan="3" class="left w-80">
+                        <select name="almacen2" id="almacen2" class="form-control input w-90 h-35" {% if operation_x == 'anular' %}readonly='readonly' {% else %}onchange="seleccionAlmacenPA();" {% endif %}>
+                            <option value="0">---</option>
+                            {% for almacen in lista_almacenes_destino %}
+                            <option value="{{almacen.almacen_id}}" {% if registro.almacen2_id == almacen.almacen_id %}selected{% endif %}>{{almacen.sucursal_id.sucursal}}-{{almacen.almacen}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+
+                <tr class="back1">
+                    <td class="right w-20">
+                        Venta&nbsp;:&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <select name="tipo_movimiento" id="tipo_movimiento" class="form-control input w-90 h-35" {% if operation_x == 'anular' %}readonly='readonly' {% else %}onchange="seleccionAlmacenPA();mostrarPPPA();" {% endif %}>
+                            <option value="0">---</option>
+                            <option value="CONTADO" {% if registro.tipo_movimiento == 'CONTADO' %}selected{% endif %}>Contado</option>
+                            <option value="FACTURA" {% if registro.tipo_movimiento == 'FACTURA' %}selected{% endif %}>Factura</option>
+                            <option value="CONSIGNACION" {% if registro.tipo_movimiento == 'CONSIGNACION' %}selected{% endif %}>Consignacion</option>
+                            <option value="PLANPAGO" {% if registro.tipo_movimiento == 'PLANPAGO' %}selected{% endif %}>PlanPago</option>
+                        </select>
+                    </td>
+                    <td class="right w-20">
+                        Precio&nbsp;:&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <select name="costo_abc" id="costo_abc" class="form-control input w-90 h-35" {% if operation_x == 'anular' %}readonly='readonly' {% else %}onchange="seleccionAlmacenPA();" {% endif %}>
+                            {% if productos_precios_abc %}
+                            <option value="0">---</option>
+                            <option value="A" {% if registro.costo_abc == 'A' %}selected{% endif %}>A</option>
+                            <option value="B" {% if registro.costo_abc == 'B' %}selected{% endif %}>B</option>
+                            <option value="C" {% if registro.costo_abc == 'C' %}selected{% endif %}>C</option>
+                            {% else %}
+                            <option value="A">A</option>
+                            {% endif %}
+                        </select>
+                    </td>
+                </tr>
+
+                <tr class="back1" id="fila_pp" {% if registro.tipo_movimiento != 'PLANPAGO' %}style="display: none;" {% endif %}>
+                    <td class="right w-20">
+                        <label>Cuotas : </label><br>
+                        <input type="text" name="numero_cuotas" value="{{plan_pagos.numero_cuotas}}" id="numero_cuotas" autocomplete="off" class="form-control input right w-50" onkeyup="validarNumero(this);">
+                    </td>
+                    <td colspan="3" class="left w-80">
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" id="radio1_pp" name="tipo_pp" value="tipo_fecha" checked="" onchange="tipoPPPA();">
+                            <label for="radio1_pp" class="custom-control-label w-25 left">Fecha&nbsp;Fija</label>
+                            <input name="fecha_fija" id="fecha_fija" value="{{fecha_actual}}" type="text" class="form-control input w-30 left" readonly="readonly">
+                            <script type="text/javascript">
+                                var foopicker = new FooPicker({
+                                    id: 'fecha_fija',
+                                    dateFormat: 'dd-MMM-yyyy'
+                                });
+                            </script>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" id="radio2_pp" name="tipo_pp" value="tipo_dias" onchange="tipoPPPA();">
+                            <label for="radio2_pp" class="custom-control-label w-25 left">D&iacute;as</label>
+                            <input type="text" name="dias" id="dias" value="{{plan_pagos.tiempo_dias}}" autocomplete="off" class="form-control input right w-30" onkeyup="validarNumero(this);">
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="back2">
+                    <td class="right w-20">
+                        Concepto&nbsp;:&nbsp;
+                    </td>
+                    <td colspan="3" class="left w-80">
+                        <input type="text" autocomplete="off" value="{{registro.concepto}}" {% if operation_x == 'anular' %}readonly="readonly" {% endif %} class="form-control input left w-90" name="concepto" id="concepto" onkeyup="txtValid(this);"
+                            onblur="txtValid(this);" maxlength="250">
+                    </td>
+                </tr>
+            </table>
+
+            <div id="div_listap" style="display: {% if operation_x == 'add' %}none{% endif %};">
+                <table class="table3 w-100">
+                    <tr>
+                        <th colspan="2" class="w-100 center">Lista de Productos</th>
+                    </tr>
+                    <tr class="back1">
+                        <td class="w-40 left" id="columna1">
+                            &nbsp;
+                        </td>
+                        <td class="w-60 center" id="columna2">
+                            <table class="table3 w-100">
+                                <tr>
+                                    <td class="w-20 right minw-40">
+                                        <i>Act</i>
+                                    </td>
+                                    <td class="w-20 right minw-40">
+                                        <i>Cant</i>
+                                    </td>
+                                    <td class="w-30 right minw-60">
+                                        <table class="tablac w-100 right">
+                                            <tr>
+                                                <td rowspan="2" class="right w-90"><i>Costo</i></td>
+                                                <td class="center w-10 h-6 v-bottom">
+                                                    {% if operation_x == 'add' %}
+                                                    <img src="{% static '/img/pass/up1.jpg' %}" class="pointer" id="up_todo" onmousedown="cambiarUp('up_todo');" onmouseup="volverUp('up_todo');" onclick="aumentarCostoTodoPA();totalPedidoPA();">
+                                                    {% else %}
+                                                    &nbsp;
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="center w-10 h-6 v-top">
+                                                    {% if operation_x == 'add' %}
+                                                    <img src="{% static '/img/pass/down1.jpg' %}" class="pointer" id="down_todo" onmousedown="cambiarDown('down_todo');" onmouseup="volverDown('down_todo');"
+                                                        onclick="disminuirCostoTodoPA();totalPedidoPA();">
+                                                    {% else %}
+                                                    &nbsp;
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                    </td>
+                                    <td class="w-30 right minw-60">
+                                        <i>Total</i>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    {% if operation_x == 'add' %}
+                    {% for fila in filas %}
+                    <tr class="back{{forloop.counter|back_class}}" id="fila_{{fila}}" style="display: {% if forloop.counter == 1 %}display{% else %}none{% endif %};">
+                        <td class="w-40 left minw-140">
+                            <input type="hidden" name="producto_{{fila}}" id="producto_{{fila}}" value="0" />
+                            <input type="text" autocomplete="off" id="tb2_{{fila}}" name="tb2_{{fila}}" class="form-control input search left w-99" value="" onblur="validarFilaPA('{{fila}}');" />
+                            <script type="text/javascript"> new autosuggest("tb2_{{fila}}", null, function (index, control) { seleccionPPA('{{fila}}', control.keywords[index], control.values[index]); }); 
+                            </script>
+                        </td>
+                        <td class="w-60 left">
+                            <div id="div_fila_{{fila}}">&nbsp;</div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    <tr class="back1">
+                        <td colspan="2" class="w-100 right">
+                            SubTotal : <input type="text" class="form-control input right w-20" name="total_pedido" id="total_pedido" readonly="readonly"> Bs.<br>
+                            
+                            &#37; Desc. <input type="text" autocomplete="off" class="form-control input right w-20" name="porcentaje_descuento" id="porcentaje_descuento" onkeyup="validarNumeroPunto(this); calcularPorcentajeDescuentoPA(); totalPedidoPA();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                            Desc. <input type="text" autocomplete="off" class="form-control input right w-20" name="descuento" id="descuento" onkeyup="validarNumeroPunto(this); totalPedidoPA();"> Bs.<br>
+                            
+                            Total : <input type="text" class="form-control input right w-20" name="total_venta" id="total_venta" readonly="readonly"> Bs.
+                        </td>
+                    </tr>
+                    {% endif %}
+
+                    {% if operation_x == 'anular' %}
+                    {% for detalle in detalles %}
+                    <tr class="back{{forloop.counter|back_class}}">
+                        <td class="w-40 left">
+                            {{detalle.insumo_id.insumo}}
+                        </td>
+                        <td class="w-60 left">
+                            <table class="tablac w-100">
+                                <tr>
+                                    <td class="w-20 right minw-40">
+                                        &nbsp;
+                                    </td>
+                                    <td class="w-20 right minw-40">
+                                        {{detalle.cantidad}}
+                                    </td>
+                                    <td class="w-30 right minw-60">
+                                        {{detalle.costo}}
+                                    </td>
+                                    <td class="w-30 right minw-60">
+                                        {{detalle.total}}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    <tr class="back1">
+                        <td class="right w-40">
+                            Motivo&nbsp;:&nbsp;
+                        </td>
+                        <td class="left w-60">
+                            <input type="text" class="form-control input w-98" onkeyup="txtValid(this);" onblur="txtValid(this);" autocomplete="off" value="" maxlength="250" name="motivo_anula" id="motivo_anula">
+                        </td>
+                    </tr>
+                    {% endif %}
+
+                    <tr class="back2">
+                        <td colspan="2" class="center w-100">&nbsp;</td>
+                    </tr>
+                    <tr class="back1">
+                        <td colspan="2" class="center w-100">
+                            {% if operation_x == "add" %}
+                            <input type="button" name="add_button" value="&nbsp;Guardar&nbsp;" class="btn btn-primary btn-sm" onclick="mandarFormularioPA('formulario', 'add_button', 'button_cancel')">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="hidden" name="add_x" value="acc">
+                            <input type="hidden" name="control_form" value="{{control_form}}">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="button" name="button_cancel" value="Cancelar" class="btn btn-primary btn-sm" onClick="backWindow();">
+                            {% endif %}
+                            {% if operation_x == "anular" and puede_anular == 1 %}
+                            <input type="button" name="add_button" value="&nbsp;Anular&nbsp;" class="btn btn-primary btn-sm" onclick="confirmarAnularPA();">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="hidden" name="control_form" value="txt|2|S|motivo_anula|">
+                            <input type="hidden" name="anular_x" value="acc">
+                            <input type="hidden" name="id" value="{{id}}">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="button" name="button_cancel" value="Cancelar" class="btn btn-primary btn-sm" onClick="backWindow();">
+                            {% endif %}
+                            <input type="hidden" id="url_main" value="{{url_main}}">
+                            <input type="hidden" id="operation_x" name="operation_x" value="{{operation_x}}">
+                            <input type="hidden" name="module_x" value="{{module_x}}">
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+        </form>
+        <br>
+        <br>
+        <br>
+        <br>
+    </div>
+    <!--fin div contenido-->
+    <div class="col-sm-2">&nbsp;</div>
+</div>
+<!--fin div contenedor-->
+<form name="form_cancel" method="post" action="{{url_main}}">
+    {% csrf_token %}
+</form>
+
+<form name="form_operation" method="post" action="{{url_main}}">
+    {% csrf_token %}
+    <input type="hidden" name="module_x" value="{{module_x}}">
+    <input type="hidden" name="module_x2" value="{{module_x2}}">
+    <input type="hidden" name="module_x3" value="{{module_x3}}">
+    
+    <input type="hidden" name="operation_x" value="{{operation_x}}">
+    <input type="hidden" name="operation_x2" value="{{operation_x2}}">
+    <input type="hidden" name="operation_x3" value="{{operation_x3}}">
+    
+    <input type="hidden" name="id" value="{{id}}">
+    <input type="hidden" name="id2" value="{{id2}}">
+    <input type="hidden" name="id3" value="{{id3}}">
+</form>

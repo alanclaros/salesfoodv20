@@ -1,0 +1,97 @@
+{% load static %}
+
+<script type="text/javascript" src="{% static "" %}js/{{js_file}}.js"></script>
+
+<div class="row align-items-center">
+    <div class="col-sm-2">&nbsp;</div>
+    <div class="col-sm-8">
+        <!--div contenedor-->
+        <br>
+        {% include 'partials/_alerts.html' %}
+
+        <form name="formulario" method="post" action="" onsubmit="return false;">
+            {% csrf_token %}
+            <table class="table3 w-100">
+                <tr>
+                    <th class="w-100 center" colspan="4">
+                        Configuraciones
+                    </th>
+                </tr>
+
+                <tr class="back1">
+                    <td class="right w-20">
+                        Cant./Pagina&nbsp;:&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <input type="text" autocomplete="off" class="form-control input right w-70" name="cant_per_page" id="cant_per_page" value="{{configuraciones.cant_per_page}}" onkeyup="validarNumero(this);">
+                    </td>
+                    <td class="right w-20">
+                        Productos&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <input type="text" autocomplete="off" class="form-control input right w-70" name="cant_products_home" id="cant_products_home" value="{{configuraciones.cant_products_home}}" onkeyup="validarNumero(this);">
+                    </td>
+                </tr>
+                
+                <tr class="back2">
+                    <td class="right w-20">
+                        Fracciones&nbsp;:&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <select name="vender_fracciones" id="vender_fracciones" class="form-control input w-70 h-35">
+                            <option value="si" {% if configuraciones.vender_fracciones != 'no' %}selected{% endif %}>SI</option>
+                            <option value="no" {% if configuraciones.vender_fracciones == 'no' %}selected{% endif %}>NO</option>
+                        </select>
+                    </td>
+                    <td class="right w-20">
+                        &nbsp;
+                    </td>
+                    <td class="left w-30">
+                        &nbsp;
+                    </td>
+                </tr>
+
+                <tr class="back1">
+                    <td colspan="4" class="center w-100">
+                        &nbsp;
+                    </td>
+                </tr>
+
+                {% if permisos.modificar %}
+                <tr class="back2">
+                    <td colspan="4" class="center w-100">
+                        <button class="btn btn-primary btn-sm" name="add_button" onclick="mandarFormularioConfiguracion();">
+                            <i class="nav-icon fas fa-save"></i>&nbsp;&nbsp;Guardar
+                        </button>
+                        
+                        <input type="hidden" name="operation_x" value="modify">
+                        <input type="hidden" name="button_cancel" value="acc">
+                        <input type="hidden" name="control_form" value="{{control_form}}">
+                    </td>
+                </tr>
+                {% endif %}
+            </table>
+        </form>
+        <br>
+
+    </div>
+    <!--fin div contenedor-->
+    <div class="col-sm-2">&nbsp;</div>
+</div>
+
+<BR><BR>
+    <form name="form_operation" method="post" action="{{url_main}}">
+        {% csrf_token %}
+        <input type="hidden" name="module_x" value="{{module_x}}">
+        <input type="hidden" name="module_x2" value="{{module_x2}}">
+        <input type="hidden" name="module_x3" value="{{module_x3}}">
+        
+        <input type="hidden" name="operation_x" value="{{operation_x}}">
+        <input type="hidden" name="operation_x2" value="{{operation_x2}}">
+        <input type="hidden" name="operation_x3" value="{{operation_x3}}">
+        
+        <input type="hidden" name="id" value="{{id}}">
+        <input type="hidden" name="id2" value="{{id2}}">
+        <input type="hidden" name="id3" value="{{id3}}">
+    </form>
+</div>

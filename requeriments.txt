@@ -1,0 +1,15 @@
+pip install django
+pip install mysqlclient-1.4.6-cp38-cp38-win32.whl (windows)
+pip3 install mysqlclient (linux)
+
+(windows:)
+pip install cryptography==2.8
+pip install django-webpush
+
+(linux:)
+pip install django-webpush
+
+
+pip install python-dateutil
+pip install reportlab
+pip install openpyxl

@@ -1,0 +1,200 @@
+{% load jinja_tags %}
+{% load static %}
+
+<div class="row align-items-center">
+    <div class="col-sm-2">&nbsp;</div>
+    <div class="col-sm-8">
+        <!--div contenedor-->
+        <br>
+        <!--alerts-->
+        {% include 'partials/_alerts.html' %}
+
+        <form name="search" method="post" action="">
+            {% csrf_token %}
+            <table class="table3 w-100">
+                <tr>
+                    <th class="w-100 center" colspan="4">
+                        Opciones de Busqueda
+                    </th>
+                </tr>
+
+                <tr class="back2">
+                    <!-- <td class="right w-20">
+                        Tipo :&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <select name="search_tipo_plan_pago" id="search_tipo_plan_pago" class="form-control input w-90" onchange="cambiarTipoPlanP();">
+                            {% if session.search_tipo_plan_pago == 'venta' %}
+                            <option value="venta" selected>Venta</option>
+                            <option value="inventario">Inventario</option>
+                            {% else %}
+                            <option value="venta">Venta</option>
+                            <option value="inventario" selected>Inventario</option>
+                            {% endif %}
+                        </select>
+                    </td> -->
+                    <td class="right w-20">
+                        Plan Pago&nbsp;:&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <input type="text" name="search_codigo" id="search_codigo" class="form-control input w-80" value="{{session.search_codigo}}" autocomplete="off" onkeyup="validarNumero(this);">
+                        <input type="hidden" name="search_tipo_plan_pago" id="search_tipo_plan_pago" value="venta">
+                    </td>
+                    <td class="right w-20">
+                        CI/NIT&nbsp;:&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <input type="text" name="search_ci_nit" id="search_ci_nit" class="form-control input w-80" value="{{ session.search_ci_nit }}" autocomplete="off" onkeyup="validarNumero(this);">
+                    </td>
+                </tr>
+
+                <tr class="back1" {% if session.search_tipo_plan_pago == 'inventario' %}style="display: none;" {% endif %} id="fila1_venta">
+                    <td class="right w-20">
+                        Apellidos&nbsp;:&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <input type="text" name="search_apellidos" id="search_apellidos" class="form-control input w-80" value="{{ session.search_apellidos }}" autocomplete="off">
+                    </td>
+                    <td class="right w-20">
+                        Nombres&nbsp;:&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <input type="text" name="search_nombres" id="search_nombres" class="form-control input w-80" value="{{ session.search_nombres }}" autocomplete="off">
+                    </td>
+                </tr>
+
+                <!-- <tr class="back2" {% if session.search_tipo_plan_pago == 'inventario' %}style="display: none;" {% endif %} id="fila2_venta">
+                    
+                    <td class="right w-20">
+                        &nbsp;
+                    </td>
+                    <td class="left w-30">
+                        &nbsp;
+                    </td>
+                </tr> -->
+
+                <tr class="back1" {% if session.search_tipo_plan_pago == 'venta' %}style="display: none;" {% endif %} id="fila1_inventario">
+                    <td class="right w-20">
+                        Concepto :&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <input type="text" name="search_concepto" id="search_concepto" class="form-control input w-80" value="{{ session.search_concepto }}" autocomplete="off">
+                    </td>
+                    <td class="right w-20">
+                        Almacen :&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <select name="search_almacen2" id="search_almacen2" class="form-control input w-90">
+                            {% for almacen in lista_almacenes %}
+                            <option value="{{almacen.almacen_id}}" {% if session.search_almacen2|add:"0" == almacen.almacen_id %}selected{% endif %}>{{almacen.almacen}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+
+                <tr class="back2">
+                    <td class="right w-20">
+                        Activos :&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <div class="custom-control custom-checkbox">
+                            <input onchange="cambiarCheck(this);" class="custom-control-input" type="checkbox" id="search_activos" name="search_activos" {% if session.search_activos == '1' %}value="1" checked{% else %}value="0" {% endif %}>
+                            <label for="search_activos" class="custom-control-label">&nbsp;</label>
+                        </div>
+                    </td>
+                    <td class="right w-20">
+                        Anulados :&nbsp;
+                    </td>
+                    <td class="left w-30">
+                        <div class="custom-control custom-checkbox">
+                            <input onchange="cambiarCheck(this);" class="custom-control-input" type="checkbox" id="search_anulados" name="search_anulados" {% if session.search_anulados == '1' %}value="1" checked{% else %}value="0" {% endif %}>
+                            <label for="search_anulados" class="custom-control-label">&nbsp;</label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="back1">
+                    <td colspan="4" class="center w-100">
+                        <button class="btn btn-primary btn-sm" name="search_button" onclick="sendSearchPlanP();">
+                            <i class="nav-icon fas fa-search"></i>&nbsp;&nbsp;Buscar
+                        </button>
+                        <input type="hidden" name="search_button_x" value="acc">
+                        <input type="hidden" name="module_x" value="{{module_x}}">
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <br>
+        <!--paginacion-->
+        {% include 'partials/pagination.html' %}
+
+        <table class="table3 w-100">
+            <tr>
+                <th class="w-25 left">
+                    Fecha
+                </th>
+                <th class="w-45 left">
+                    Detalle
+                </th>
+                <th class="w-15 left">
+                    Total
+                </th>
+                <th class="w-15 left">
+                    Saldo
+                </th>
+            </tr>
+
+            {% for plan_pago in planes_pagos %}
+            <tr class="pointer back{{forloop.counter|back_class_color:plan_pago.status_id}}" onclick="detallePPPlanP('{{plan_pago.plan_pago_id}}');nd();" onMouseOver=" overlib('Detalle del Plan de Pago',CAPTION,'Plan Pago',WIDTH,'120',LEFT); return true"
+                onMouseOut=" nd(); return true">
+                <td class="left w-25">
+                    {{plan_pago.fecha|fecha_mostrar:'dd-MMM-yyyy'}}
+                    ({{plan_pago.plan_pago_id}})
+                </td>
+                <td class="left w-45">
+                    {{plan_pago.detalle}}
+                </td>
+                <td class="right w-15">
+                    {{plan_pago.monto_total}} Bs.
+                </td>
+                <td class="right w-15">
+                    {{plan_pago.saldo}} Bs.
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <br>
+    </div>
+    <!--fin div contenedor-->
+    <div class="col-sm-2">&nbsp;</div>
+</div>
+
+<BR><BR>
+<form name="form_order" method="post" action="">
+    {% csrf_token %}
+    <input type="hidden" name="{{session.variable_order}}" value="{{session|get_item:session.variable_order}}">
+    <input type="hidden" name="{{session.variable_order_type}}" value="{{session|get_item:session.variable_order_type}}">
+</form>
+
+<form name="form_print" method="post" action="{{url_main}}" target="_blank">
+    {% csrf_token %}
+    <input type="hidden" name="module_x" value="{{module_x}}">
+    <input type="hidden" name="operation_x" value="">
+    <input type="hidden" name="id" value="">
+</form>
+
+<form name="form_operation" method="post" action="{{url_main}}">
+    {% csrf_token %}
+    <input type="hidden" name="module_x" value="{{module_x}}">
+    <input type="hidden" name="module_x2" value="{{module_x2}}">
+    <input type="hidden" name="module_x3" value="{{module_x3}}">
+    
+    <input type="hidden" name="operation_x" value="{{operation_x}}">
+    <input type="hidden" name="operation_x2" value="{{operation_x2}}">
+    <input type="hidden" name="operation_x3" value="{{operation_x3}}">
+    
+    <input type="hidden" name="id" value="{{id}}">
+    <input type="hidden" name="id2" value="{{id2}}">
+    <input type="hidden" name="id3" value="{{id3}}">
+</form>
+</div>

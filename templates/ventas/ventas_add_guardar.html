@@ -1,0 +1,68 @@
+{% load humanize %}
+{% load jinja_tags %}
+{% load static %}
+
+<table class="table3 w-100">
+    <tr>
+        <th colspan="4" class="center w-100">
+            Ventas del {{fecha_actual}}
+        </th>
+    </tr>
+
+    <tr class="back1">
+        <td class="right w-20">
+            Venta&nbsp;:&nbsp;
+        </td>
+        <td colspan="3" class="left w-80">
+            {{datos_venta.venta_id}} &nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="button" class="btn btn-primary btn-xs btn_search" value="&#60;&#60;" {% if datos_venta.previous_id == 0 %}disabled{% endif %}>
+            &nbsp;
+            <input type="button" class="btn btn-primary btn-xs btn_search" value="&#62;&#62;" {% if datos_venta.next_id == 0 %}disabled{% endif %}>
+            {% if datos_venta.venta_id != 0 %}
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <img src="{% static '/img/png/impresora.png' %}" class="ico_img pointer" onclick="imprimirVenta('{{datos_venta.venta_id}}');" onMouseOver=" overlib('Imprimir venta',CAPTION,'Imprimir',WIDTH,'120',RIGHT); return true"
+                onMouseOut=" nd(); return true">
+            {% if datos_venta.status_id.status_id != estado_anulado %}
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <img src="{% static '/img/png/anular.png' %}" class="ico_img pointer" onclick="anularVenta('{{datos_venta.venta_id}}');" onMouseOver=" overlib('Anular venta',CAPTION,'Anular',WIDTH,'120',RIGHT); return true"
+                onMouseOut=" nd(); return true">
+            {% endif %}
+            {% endif %}
+        </td>
+    </tr>
+
+    <tr class="back2">
+        <td class="right w-20">
+            Cliente&nbsp;:&nbsp;
+        </td>
+        <td colspan="3" class="left w-80">
+            {{datos_venta.apellidos}} {{datos_venta.nombres}}, CI/NIT : {{datos_venta.ci_nit}}
+        </td>
+    </tr>
+
+    <tr class="back1">
+        <td class="right w-20">
+            Subtotal&nbsp;:&nbsp;
+        </td>
+        <td colspan="3" class="left w-80">
+            {{datos_venta.subtotal}} Bs, Desc. : {{datos_venta.descuento}}, <b>Total :</b> {{datos_venta.total}}
+        </td>
+    </tr>
+
+    <tr class="back2">
+        <td class="right w-20">
+            Detalles&nbsp;:&nbsp;
+        </td>
+        <td colspan="3" class="left w-80">
+            {% for detalle in datos_venta.detalles %}
+            {{detalle.producto}} {{detalle.cantidad}} {{detalle.costo}} {{detalle.total}}
+            {% endfor %}
+        </td>
+    </tr>
+
+    <tr class="back2">
+        <td colspan="4" class="left w-100">
+            &nbsp;
+        </td>
+    </tr>
+</table>

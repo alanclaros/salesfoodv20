@@ -1,0 +1,259 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+{% load static %}
+{% load jinja_tags %}
+
+{% block title %} | Inicio {% endblock %}
+
+{% block content %}
+<br>
+<div class="row">
+    <div class="col-12 center">
+        <span class="index_titulo">Productos Kris</span>
+    </div>
+</div>
+
+<!--cuadros-->
+<br>
+<table class="w-100">
+    <tr>
+        <td class="w-4">&nbsp;</td>
+        <td class="w-96 center">
+            <!--primeros 3 cuadros depues de la imagen-->
+            <div class="row w-100 cuadros_index">
+                <div class="col-sm-2 center">
+                    <img src="{% static 'img/page/lineas/kris_mayonesa_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">Mayonesa Kris</a>
+                </div>
+                
+                <div class="col-sm-2 center">
+                    <img src="{% static 'img/page/lineas/kris_ketchup_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">Ketchup Kris</a>
+                </div>
+                
+                <div class="col-sm-2 center">
+                    <img src="{% static 'img/page/lineas/kris_mostaza_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">Mostaza Kris</a>
+                </div>
+                
+                <div class="col-sm-2 center">
+                    <img src="{% static 'img/page/lineas/kris_salsa_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">Salsa Kris</a>
+                </div>
+                
+                <div class="col-sm-2 center">
+                    <img src="{% static 'img/page/lineas/kris_kriolla_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">Kriolla</a>
+                </div>
+                
+                <div class="col-sm-2 center">
+                    <img src="{% static 'img/page/lineas/kris_aceite_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">Aceite Kris</a>
+                </div>
+            </div>
+            
+            <br>
+            <div class="row w-100 cuadros_index">
+                <div class="col-sm-2 center">
+                    <img src="{% static 'img/page/lineas/kris_pure_papas_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">Pure Papas</a>
+                </div>
+                
+                <div class="col-sm-2 center">
+                    <img src="{% static 'img/page/lineas/kris_sopa_crema_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">Sopas y Cremas</a>
+                </div>
+                
+                <div class="col-sm-2 center">
+                    <img src="{% static 'img/page/lineas/kris_avena_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">Avena Kris</a>
+                </div>
+                
+                <div class="col-sm-2 center">
+                    <img src="{% static 'img/page/lineas/kris_cereal_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">Cereal Kris</a>
+                </div>
+                
+                <div class="col-sm-2 center">
+                    <img src="{% static 'img/page/lineas/kris_maicena_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">Maicena</a>
+                </div>
+                
+                <div class="col-sm-2 center">
+                    <img src="{% static 'img/page/lineas/kris_milkshake_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">Milk Shake</a>
+                </div>
+            </div>
+            
+            <br>
+            <div class="row w-100 cuadros_index">
+                <div class="col-sm-2 center">
+                    <img src="{% static 'img/page/lineas/kris_flan_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">Flan, Pudin, Duraznos</a>
+                </div>
+                
+                <div class="col-sm-2 center">
+                    <img src="{% static 'img/page/lineas/kris_gelatina_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">Gelatina</a>
+                </div>
+                
+                <div class="col-sm-2 center">
+                    <img src="{% static 'img/page/lineas/kris_kriskao_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">Kriskao</a>
+                </div>
+                
+                <div class="col-sm-2 center">
+                    <img src="{% static 'img/page/lineas/kris_nectar_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">Nectar Kris</a>
+                </div>
+                
+                <div class="col-sm-2 center">
+                    <img src="{% static 'img/page/lineas/kris_refresco_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">Refrescos Kris</a>
+                </div>
+                
+                <div class="col-sm-2 center">
+                    <img src="{% static 'img/page/lineas/kris_energy_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">Kris Energy</a>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+
+<br><br>
+<div class="row">
+    <div class="col-12 center">
+        <span class="index_titulo">Productos Fleischmann</span>
+    </div>
+</div>
+
+<!--cuadros-->
+<br>
+<table class="w-100">
+    <tr>
+        <td class="w-4">&nbsp;</td>
+        <td class="w-96 center">
+            <!--primeros 3 cuadros depues de la imagen-->
+            <div class="row w-100 cuadros_index">
+                <div class="col-sm-3 center">
+                    <img src="{% static 'img/page/lineas/fleis_levadura_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">Levaduras</a>
+                </div>
+                
+                <div class="col-sm-3 center">
+                    <img src="{% static 'img/page/lineas/fleis_polvo_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">Polvo de Hornear</a>
+                </div>
+                
+                <div class="col-sm-3 center">
+                    <img src="{% static 'img/page/lineas/fleis_mejorador_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">Mejorador de Masa</a>
+                </div>
+                
+                <div class="col-sm-3 center">
+                    <img src="{% static 'img/page/lineas/fleis_crema_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">Cremas en Polvo</a>
+                </div>
+                
+                <!-- <div class="col-sm-2 center">
+                    <img src="{% static 'img/page/lineas/kris_kriolla_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">Kriolla</a>
+                </div>
+                
+                <div class="col-sm-2 center">
+                    <img src="{% static 'img/page/lineas/kris_aceite_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">Aceite Kris</a>
+                </div> -->
+            </div>
+        </td>
+    </tr>
+</table>
+
+
+<br>
+<br>
+<div class="row">
+    <div class="col-12 center">
+        <span class="index_titulo">Productos Bristar</span>
+    </div>
+</div>
+
+<!--cuadros-->
+<br>
+<table class="w-100">
+    <tr>
+        <td class="w-4">&nbsp;</td>
+        <td class="w-96 center">
+            <!--primeros 3 cuadros depues de la imagen-->
+            <div class="row w-100 cuadros_index">
+                <div class="col-sm-2 center">
+                    <img src="{% static 'img/page/lineas/bristar_detergente_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">Detergente en Polvo</a>
+                </div>
+                
+                <div class="col-sm-2 center">
+                    <img src="{% static 'img/page/lineas/bristar_vajilla_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">LavaVajillas</a>
+                </div>
+                
+                <div class="col-sm-2 center">
+                    <img src="{% static 'img/page/lineas/bristar_piso_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">LimpiaPisos</a>
+                </div>
+                
+                <div class="col-sm-2 center">
+                    <img src="{% static 'img/page/lineas/bristar_grasa_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">Sacagrasa, Sarro</a>
+                </div>
+                
+                <div class="col-sm-2 center">
+                    <img src="{% static 'img/page/lineas/bristar_banio_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">Limpia Vidrios, Ba&#241;os</a>
+                </div>
+                
+                <div class="col-sm-2 center">
+                    <img src="{% static 'img/page/lineas/bristar_shabay_01_png.png' %}" class="img-fluid">
+                    <br>
+                    <a href="/productosinicio/" class="link_index">Shabay Jabon liquido</a>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<!--pie de pagina-->
+{% include 'pages/pie_pagina.html' %}
+
+{% endblock %}

@@ -1,0 +1,44 @@
+{% load humanize %}
+{% load jinja_tags %}
+{% load static %}
+<input type="hidden" name="stock_ids_{{producto_id}}" id="stock_ids_{{producto_id}}" value="{{stock_ids}}">
+<table class="tablac w-100">
+    {% for stock in stock_producto %}
+    <tr class="back1">
+        <td class="w-16 right minw-40">
+            <input type="text" tabindex="-1" id="lote_{{stock.stock_id}}" name="lote_{{stock.stock_id}}" value="{{stock.lote}}" class="form-control input right w-99" readonly="readonly">
+        </td>
+        <td class="w-16 right minw-40">
+            <input type="text" tabindex="-1" id="actual_{{stock.stock_id}}" name="actual_{{stock.stock_id}}" value="{{stock.cantidad}}" class="form-control input right w-99" readonly="readonly">
+            
+            <input type="hidden" id="f_venc_{{stock.stock_id}}" name="f_venc_{{stock.stock_id}}" value="{{stock.fecha_vencimiento|fecha_mostrar:"d-M-yy"}}">
+            <input type="hidden" name="f_elab_{{stock.stock_id}}" id="f_elab_{{stock.stock_id}}" value="{{stock.fecha_elaboracion|fecha_mostrar:"d-M-yy"}}">
+        </td>
+        <td class="w-18 right minw-40">
+            <input type="text" autocomplete="off" class="form-control input right w-98" name="cantidad_{{stock.stock_id}}" id="cantidad_{{stock.stock_id}}" onkeyup="{% if vender_fracciones == 'si' %}validarNumeroPunto(this);{% else %}validarNumero(this);{% endif %}controlarStock{{stock_js}}('{{stock.stock_id}}');totalPedido{{stock_js}}();">
+        </td>
+        <td class="w-25 right minw-60">
+            <table class="tablac w-100 right">
+                <tr>
+                    <td rowspan="2" class="right w-90">
+                        <input type="text" autocomplete="off" class="form-control input right w-98" name="costo_{{stock.stock_id}}" id="costo_{{stock.stock_id}}" onkeyup="validarNumeroPunto(this);totalPedido{{stock_js}}();">
+                    </td>
+                    <td class="center w-10 v-top">
+                        <img src="{% static '/img/pass/up1.jpg' %}" class="pointer" id="up_{{stock.stock_id}}" onmousedown="cambiarUp('up_{{stock.stock_id}}');" onmouseup="volverUp('up_{{stock.stock_id}}');"
+                            onclick="aumentarCosto{{stock_js}}('costo_{{stock.stock_id}}');totalPedido{{stock_js}}();">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="center w-10 v-top">
+                        <img src="{% static '/img/pass/down1.jpg' %}" class="pointer" id="down_{{stock.stock_id}}" onmousedown="cambiarDown('down_{{stock.stock_id}}');" onmouseup="volverDown('down_{{stock.stock_id}}');"
+                            onclick="disminuirCosto{{stock_js}}('costo_{{stock.stock_id}}');totalPedido{{stock_js}}();">
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <td class="w-25 right minw-60">
+            <input type="text" tabindex="-1" class="form-control input right w-98" name="total_{{stock.stock_id}}" id="total_{{stock.stock_id}}" readonly="readonly">
+        </td>
+    </tr>
+    {% endfor %}
+</table>

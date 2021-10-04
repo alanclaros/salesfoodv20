@@ -1,0 +1,11 @@
+{% load humanize %}
+{% load jinja_tags %}
+{% load static %}
+
+<select name="preventa" id="preventa" class="form-control input w-80 h-35">
+    <option value="0">---</option>
+    {% for preventa in lista_preventas %}
+    <option value="{{preventa.preventa_id}}">{{preventa.fecha|fecha_mostrar:'dd-MMM-yyyy'}}, ({{preventa.numero_preventa}}) - {{preventa.apellidos}} {{preventa.nombres}}, {{preventa.total}} bs.</option>
+    {% endfor %}
+</select>
+<input type="button" class="btn btn-secondary btn-xs v-middle" value="Cargar" onclick="loadPreventaData();">

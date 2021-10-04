@@ -1,0 +1,30 @@
+<input type="hidden" id="m_almacen_id" value="{{datos_venta.almacen_id}}">
+<input type="hidden" id="m_tipo_preventa" value="{{datos_venta.tipo_preventa}}">
+<input type="hidden" id="m_costo_abc" value="{{datos_venta.costo_abc}}">
+<input type="hidden" id="m_cliente_id" value="{{datos_venta.cliente_id}}">
+<input type="hidden" id="m_apellidos" value="{{datos_venta.apellidos}}">
+<input type="hidden" id="m_nombres" value="{{datos_venta.nombres}}">
+<input type="hidden" id="m_ci_nit" value="{{datos_venta.ci_nit}}">
+<input type="hidden" id="m_telefonos" value="{{datos_venta.telefonos}}">
+
+<input type="hidden" id="m_porcentaje_descuento" value="{{datos_venta.porcentaje_descuento}}">
+<input type="hidden" id="m_descuento" value="{{datos_venta.descuento}}">
+
+<input type="hidden" id="m_numero_cuotas" value="{{datos_venta.numero_cuotas}}">
+<input type="hidden" id="m_mensual_dias" value="{{datos_venta.mensual_dias}}">
+<input type="hidden" id="m_tiempo_dias" value="{{datos_venta.tiempo_dias}}">
+<input type="hidden" id="m_fecha_fija" value="{{datos_venta.fecha_fija}}">
+
+<input type="hidden" id="m_venta_id" value="{{datos_venta.venta_id}}">
+<input type="hidden" id="tipo_operacion" value="load_preventa">
+
+{% for detalle in datos_venta.detalles %}
+<span id="m_producto_{{forloop.counter}}">{{detalle.producto_linea}}</span>
+<span id="m_producto_id_{{forloop.counter}}">{{detalle.producto_id}}</span>
+<span id="m_cantidad_{{forloop.counter}}">{{detalle.cantidad}}</span>
+<span id="m_costo_{{forloop.counter}}">{{detalle.costo}}</span>
+<span id="m_total_{{forloop.counter}}">{{detalle.total}}</span>
+<span id="m_fecha_elab_{{forloop.counter}}">{{detalle.fecha_elaboracion_mod}}</span>
+<span id="m_fecha_venc_{{forloop.counter}}">{{detalle.fecha_vencimiento_mod}}</span>
+<span id="m_lote_{{forloop.counter}}">{{detalle.lote}}</span>
+{% endfor %}

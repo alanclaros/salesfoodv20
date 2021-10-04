@@ -1,0 +1,69 @@
+{% load humanize %}
+{% load jinja_tags %}
+{% load static %}
+
+<table class="tablab w-100">
+    {% if error == 1 %}
+    <tr class="back2">
+        <td colspan="3" class="center w-100">
+            <b>{{error_message}}</b>
+            <input type="hidden" id="r_operation" value="0">
+        </td>
+    </tr>
+    {% endif %}
+
+    {% if error == 0 %}
+    <tr class="back2">
+        <td colspan="3" class="center w-100">
+            <b><i>Adicionado Correctamente!</i></b>
+            <input type="hidden" id="r_ci_nit" value="{{ci_nit}}">
+            <input type="hidden" id="r_apellidos" value="{{apellidos}}">
+            <input type="hidden" id="r_nombres" value="{{nombres}}">
+            <input type="hidden" id="r_telefonos" value="{{telefonos}}">
+            <input type="hidden" id="r_direccion" value="{{direccion}}">
+            <input type="hidden" id="r_operation" value="1">
+        </td>
+    </tr>
+    {% endif %}
+
+    {% if error != 0 and error != 1 %}
+    <tr class="back1">
+        <td class="left w-30">
+            <input type="text" name="n_ci_nit" id="n_ci_nit" class="form-control input w-90 left" placeholder="CI/NIT">
+        </td>
+        <td class="left w-35">
+            <input type="text" name="n_apellidos" id="n_apellidos" class="form-control input w-90 left" placeholder="Apellidos">
+        </td>
+        <td class="left w-35">
+            <input type="text" name="n_nombres" id="n_nombres" class="form-control input w-90 left" placeholder="Nombres">
+        </td>
+    </tr>
+
+    <tr class="back2">
+        <td colspan="2" class="left w-65">
+            <input type="text" name="n_telefonos" id="n_telefonos" class="form-control input w-90 left" placeholder="Telefonos">
+        </td>
+        <td class="left w-35">
+            &nbsp;
+        </td>
+    </tr>
+    
+    <tr class="back1">
+        <td colspan="3" class="left w-100">
+            <input type="text" name="n_direccion" id="n_direccion" class="form-control input w-90 left" maxlength="250" placeholder="Direccion">
+        </td>
+    </tr>
+
+    <tr class="back2">
+        <td colspan="3" class="center w-100">
+            <input type="button" id="btn_guardar_nc" class="btn btn-primary btn-xs btn_search" value="Guardar" onclick="guardarNuevoCliente{{ventana_js}}();">
+        </td>
+    </tr>
+    {% endif %}
+
+    <tr class="back1">
+        <td colspan="3" class="center w-100">
+            &nbsp;
+        </td>
+    </tr>
+</table>

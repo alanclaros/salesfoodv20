@@ -1,0 +1,21 @@
+{% load jinja_tags %}
+{% load static %}
+
+<table class="table3 w-100">
+    <tr>
+        <th colspan="4" class="w-100 center h-25">Extras</th>
+    </tr>
+    {% for extra in extras %}
+    <tr class="back{{forloop.counter|back_class}}">
+        <td colspan="3" class="left w-80">
+            {{extra.extra}}, <b>{{extra.precio}} Bs.</b>, pos : {{extra.posicion}}
+        </td>
+        <td class="center w-20">
+            <img src="{% static '/img/png/delete.png' %}" class="ico_img pointer" onclick="quitarExtra('{{extra.extra_id}}');">
+        </td>
+    </tr>
+    {% endfor %}
+    <tr class="back1">
+        <td colspan="4" class="w-100">&nbsp;</td>
+    </tr>
+</table>

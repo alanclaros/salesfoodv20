@@ -1,0 +1,221 @@
+{% load jinja_tags %}
+{% load static %}
+
+<script type="text/javascript" src="{% static "" %}js/{{js_file}}.js"></script>
+<!-- InputMask -->
+<script src="{% static 'plugins/moment/moment.min.js' %}"></script>
+<script src="{% static 'plugins/inputmask/min/jquery.inputmask.bundle.min.js' %}"></script>
+
+<!-- Page script -->
+<script>
+    $(function () {
+        //Datemask dd/mm/yyyy
+        $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+        $('[data-mask]').inputmask()
+    })
+</script>
+
+{% if operation_x == 'add' %}
+<link rel="stylesheet" href="{% static 'js/autosuggest/autosuggest.css' %}">
+<script type="text/javascript" src="{% static "" %}js/autosuggest/autosuggest.js"></script>
+<!-- Autosuggest data: -->
+<script type="text/javascript">
+    var suggest_custom_array_2 = [
+        {% for producto in lista_productos %}
+    ['{{producto.producto}}', '{{producto.producto_id}}'],
+        {% endfor %}
+    ];
+</script>
+{% endif %}
+
+<!--contenedor-->
+<div class="row align-items-center">
+    <div class="col-sm-2">&nbsp;</div>
+    <div class="col-md-8">
+        <!--contenido-->
+        <!--alerts-->
+        {% include 'partials/_alerts.html' %}
+        <br>
+        {% if puede_anular == 0 %}
+        <div class="alert alert-info alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h5><i class="icon fas fa-info"></i>Salidas Almacen!</h5>
+            No puede Anular esta salida, tiene registros en otros modulos, consulte con el administrador
+        </div>
+        <br>
+        {% endif %}
+        <div class="link_blue right">
+            <span class="link_blue pointer" onclick="backWindow();">Volver</span>
+        </div>
+        <br>
+        <form name="formulario" method="post" action="" onsubmit="return false;">
+            {% csrf_token %}
+            <table class="table3 w-100">
+                <tr>
+                    <th colspan="4" class="center w-100">
+                        {% if operation_x == "add" %}Adicionar Salida Almacen{% endif %}
+                        {% if operation_x == "anular" %}Anular Salida Almacen{% endif %}
+                    </th>
+                </tr>
+
+                <tr class="back1">
+                    <td class="right w-20">
+                        Almacen&nbsp;:&nbsp;
+                    </td>
+                    <td colspan="3" class="left w-80">
+                        <select name="almacen" id="almacen" onchange="seleccionAlmacenSA();" class="form-control input w-90" {% if operation_x == 'anular' %}readonly='readonly' {% endif %}>
+                            <option value="0">---</option>
+                            {% for almacen in lista_almacenes %}
+                            <option value="{{almacen.almacen_id}}" {% if registro.almacen_id.almacen_id == almacen.almacen_id %}selected{% endif %}>{{almacen.sucursal_id.sucursal}}-{{almacen.almacen}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+
+                <tr class="back2">
+                    <td class="right w-20">
+                        Concepto&nbsp;:&nbsp;
+                    </td>
+                    <td colspan="3" class="left w-80">
+                        <input type="text" autocomplete="off" value="{{registro.concepto}}" {% if operation_x == 'anular' %}readonly="readonly" {% endif %} class="form-control input left w-90" name="concepto" id="concepto" onkeyup="txtValid(this);"
+                            onblur="txtValid(this);" maxlength="250">
+                    </td>
+                </tr>
+            </table>
+
+            <div id="div_listap" style="display: {% if operation_x == 'add' %}none{% endif %};">
+                <table class="table3 w-100">
+                    <tr>
+                        <th colspan="2" class="w-100 center">Lista de Productos</th>
+                    </tr>
+                    <tr class="back1">
+                        <td class="w-40 left" id="columna1">
+                            &nbsp;
+                        </td>
+                        <td class="w-60 center" id="columna2">
+                            <table class="table3 w-100">
+                                <tr class="back1">
+                                    <td class="w-30 right" id="columna3">
+                                        <i>F.Vec.</i>
+                                    </td>
+                                    <td class="w-30 right" id="columna4">
+                                        <i>Lote</i>
+                                    </td>
+                                    <td class="w-20 right" id="columna6">
+                                        <i>Act.</i>
+                                    </td>
+                                    <td class="w-20 right" id="columna7">
+                                        <i>Salida</i>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    {% if operation_x == 'add' %}
+                    {% for fila in filas %}
+                    <tr class="back{{forloop.counter|back_class}}" id="fila_{{fila}}" style="display: {% if forloop.counter == 1 %}display{% else %}none{% endif %};">
+                        <td class="w-40 left">
+                            <input type="hidden" name="producto_{{fila}}" id="producto_{{fila}}" value="0" />
+                            <input type="text" autocomplete="off" id="tb2_{{fila}}" name="tb2_{{fila}}" class="form-control input search left w-99" value="" onblur="validarFilaSA('{{fila}}');" />
+                            <script type="text/javascript"> new autosuggest("tb2_{{fila}}", null, function (index, control) { seleccionPSA('{{fila}}', control.keywords[index], control.values[index]); }); 
+                            </script>
+                        </td>
+                        <td class="w-60 left">
+                            <div id="div_fila_{{fila}}">&nbsp;</div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                    {% endif %}
+                    {% if operation_x == 'anular' %}
+                    {% for detalle in detalles %}
+                    <tr class="back{{forloop.counter|back_class}}">
+                        <td class="w-40 left">
+                            {{detalle.insumo_id.insumo}}
+                        </td>
+                        <td class="w-60 left">
+                            <table class="table3 w-100">
+                                <tr>
+                                    <td class="w-30 right">
+                                        {{detalle.fecha_vencimiento|fecha_mostrar:"dd-MMM-yyyy"}}
+                                    </td>
+                                    <td class="w-30 right">
+                                        {{detalle.lote}}
+                                    </td>
+                                    <td class="w-20 right">
+                                        &nbsp;
+                                    </td>
+                                    <td class="w-20 right">
+                                        {{detalle.cantidad}}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    <tr class="back1">
+                        <td class="right w-40">
+                            Motivo&nbsp;:&nbsp;
+                        </td>
+                        <td class="left w-60">
+                            <input type="text" class="form-control input w-98" onkeyup="txtValid(this);" onblur="txtValid(this);" autocomplete="off" value="" maxlength="250" name="motivo_anula" id="motivo_anula">
+                        </td>
+                    </tr>
+                    {% endif %}
+
+                    <tr class="back2">
+                        <td colspan="2" class="center w-100">&nbsp;</td>
+                    </tr>
+                    <tr class="back1">
+                        <td colspan="2" class="center w-100">
+                            {% if operation_x == "add" %}
+                            <input type="button" name="add_button" value="&nbsp;Guardar&nbsp;" class="btn btn-primary btn-sm" onclick="mandarFormularioSA('formulario', 'add_button', 'button_cancel')">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="hidden" name="add_x" value="acc">
+                            <input type="hidden" name="control_form" value="{{control_form}}">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="button" name="button_cancel" value="Cancelar" class="btn btn-primary btn-sm" onClick="backWindow();">
+                            {% endif %}
+                            {% if operation_x == "anular" and puede_anular == 1 %}
+                            <input type="button" name="add_button" value="&nbsp;Anular&nbsp;" class="btn btn-primary btn-sm" onclick="confirmarAnularSA();">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="hidden" name="control_form" value="txt|2|S|motivo_anula|">
+                            <input type="hidden" name="anular_x" value="acc">
+                            <input type="hidden" name="id" value="{{id}}">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="button" name="button_cancel" value="Cancelar" class="btn btn-primary btn-sm" onClick="backWindow();">
+                            {% endif %}
+                            <input type="hidden" id="url_main" value="{{url_main}}">
+                            <input type="hidden" id="operation_x" name="operation_x" value="{{operation_x}}">
+                            <input type="hidden" name="module_x" value="{{module_x}}">
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+        </form>
+        <br>
+    </div>
+    <!--fin div contenido-->
+    <div class="col-sm-2">&nbsp;</div>
+</div>
+<!--fin div contenedor-->
+<form name="form_cancel" method="post" action="{{url_main}}">
+    {% csrf_token %}
+</form>
+
+<form name="form_operation" method="post" action="{{url_main}}">
+    {% csrf_token %}
+    <input type="hidden" name="module_x" value="{{module_x}}">
+    <input type="hidden" name="module_x2" value="{{module_x2}}">
+    <input type="hidden" name="module_x3" value="{{module_x3}}">
+    
+    <input type="hidden" name="operation_x" value="{{operation_x}}">
+    <input type="hidden" name="operation_x2" value="{{operation_x2}}">
+    <input type="hidden" name="operation_x3" value="{{operation_x3}}">
+    
+    <input type="hidden" name="id" value="{{id}}">
+    <input type="hidden" name="id2" value="{{id2}}">
+    <input type="hidden" name="id3" value="{{id3}}">
+</form>
+

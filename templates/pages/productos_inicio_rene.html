@@ -1,0 +1,611 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+{% load static %}
+{% load jinja_tags %}
+
+{% block title %} | Productos {% endblock %}
+{% block js_modulo %}
+<script type="text/javascript" src="{% static "" %}js/home_page.js"></script>
+{% endblock %}
+
+{% block content %}
+<style>
+    /*.carousel-inner>.item>a>img,
+    .carousel-inner>.item>img,
+    .img-responsive,
+    .thumbnail a>img,
+    .thumbnail>img {
+        display: block;
+        max-width: 100%;
+        height: auto
+    }
+
+    .img-rounded {
+        border-radius: 6px
+    }
+
+    .img-thumbnail {
+        display: inline-block;
+        max-width: 100%;
+        height: auto;
+        padding: 4px;
+        line-height: 1.42857143;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        -webkit-transition: all .2s ease-in-out;
+        -o-transition: all .2s ease-in-out;
+        transition: all .2s ease-in-out
+    }
+
+    .img-circle {
+        border-radius: 50%
+    }
+
+    hr {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        border: 0;
+        border-top: 1px solid #eee
+    }
+
+    .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0
+    }*/
+
+
+
+
+    .carousel {
+        position: relative
+    }
+
+    .carousel-inner {
+        position: relative;
+        width: 100%;
+        overflow: hidden
+    }
+
+    .carousel-inner>.item {
+        position: relative;
+        display: none;
+        -webkit-transition: .6s ease-in-out left;
+        -o-transition: .6s ease-in-out left;
+        transition: .6s ease-in-out left
+    }
+
+    .carousel-inner>.item>a>img,
+    .carousel-inner>.item>img {
+        line-height: 1
+    }
+
+    @media all and (transform-3d),
+    (-webkit-transform-3d) {
+        .carousel-inner>.item {
+            -webkit-transition: -webkit-transform .6s ease-in-out;
+            -o-transition: -o-transform .6s ease-in-out;
+            transition: transform .6s ease-in-out;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            -webkit-perspective: 1000px;
+            perspective: 1000px
+        }
+
+        .carousel-inner>.item.active.right,
+        .carousel-inner>.item.next {
+            left: 0;
+            -webkit-transform: translate3d(100%, 0, 0);
+            transform: translate3d(100%, 0, 0)
+        }
+
+        .carousel-inner>.item.active.left,
+        .carousel-inner>.item.prev {
+            left: 0;
+            -webkit-transform: translate3d(-100%, 0, 0);
+            transform: translate3d(-100%, 0, 0)
+        }
+
+        .carousel-inner>.item.active,
+        .carousel-inner>.item.next.left,
+        .carousel-inner>.item.prev.right {
+            left: 0;
+            -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0)
+        }
+    }
+
+    .carousel-inner>.active,
+    .carousel-inner>.next,
+    .carousel-inner>.prev {
+        display: block
+    }
+
+    .carousel-inner>.active {
+        left: 0
+    }
+
+    .carousel-inner>.next,
+    .carousel-inner>.prev {
+        position: absolute;
+        top: 0;
+        width: 100%
+    }
+
+    .carousel-inner>.next {
+        left: 100%
+    }
+
+    .carousel-inner>.prev {
+        left: -100%
+    }
+
+    .carousel-inner>.next.left,
+    .carousel-inner>.prev.right {
+        left: 0
+    }
+
+    .carousel-inner>.active.left {
+        left: -100%
+    }
+
+    .carousel-inner>.active.right {
+        left: 100%
+    }
+
+    .carousel-control {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 15%;
+        font-size: 20px;
+        color: #fff;
+        text-align: center;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, .6);
+        background-color: rgba(0, 0, 0, 0);
+        filter: alpha(opacity=50);
+        opacity: .5
+    }
+
+    .carousel-control.left {
+        background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, .5) 0, rgba(0, 0, 0, .0001) 100%);
+        background-image: -o-linear-gradient(left, rgba(0, 0, 0, .5) 0, rgba(0, 0, 0, .0001) 100%);
+        background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, .5)), to(rgba(0, 0, 0, .0001)));
+        background-image: linear-gradient(to right, rgba(0, 0, 0, .5) 0, rgba(0, 0, 0, .0001) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#80000000', endColorstr='#00000000', GradientType=1);
+        background-repeat: repeat-x
+    }
+
+    .carousel-control.right {
+        right: 0;
+        left: auto;
+        background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, .0001) 0, rgba(0, 0, 0, .5) 100%);
+        background-image: -o-linear-gradient(left, rgba(0, 0, 0, .0001) 0, rgba(0, 0, 0, .5) 100%);
+        background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, .0001)), to(rgba(0, 0, 0, .5)));
+        background-image: linear-gradient(to right, rgba(0, 0, 0, .0001) 0, rgba(0, 0, 0, .5) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#80000000', GradientType=1);
+        background-repeat: repeat-x
+    }
+
+    .carousel-control:focus,
+    .carousel-control:hover {
+        color: #fff;
+        text-decoration: none;
+        filter: alpha(opacity=90);
+        outline: 0;
+        opacity: .9
+    }
+
+    .carousel-control .glyphicon-chevron-left,
+    .carousel-control .glyphicon-chevron-right,
+    .carousel-control .icon-next,
+    .carousel-control .icon-prev {
+        position: absolute;
+        top: 50%;
+        z-index: 5;
+        display: inline-block;
+        margin-top: -10px
+    }
+
+    .carousel-control .glyphicon-chevron-left,
+    .carousel-control .icon-prev {
+        left: 50%;
+        margin-left: -10px
+    }
+
+    .carousel-control .glyphicon-chevron-right,
+    .carousel-control .icon-next {
+        right: 50%;
+        margin-right: -10px
+    }
+
+    .carousel-control .icon-next,
+    .carousel-control .icon-prev {
+        width: 20px;
+        height: 20px;
+        font-family: serif;
+        line-height: 1
+    }
+
+    .carousel-control .icon-prev:before {
+        content: '\2039'
+    }
+
+    .carousel-control .icon-next:before {
+        content: '\203a'
+    }
+
+    .carousel-indicators {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        z-index: 15;
+        width: 60%;
+        padding-left: 0;
+        margin-left: -30%;
+        text-align: center;
+        list-style: none
+    }
+
+    .carousel-indicators li {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        margin: 1px;
+        text-indent: -999px;
+        cursor: pointer;
+        background-color: #000\9;
+        background-color: rgba(0, 0, 0, 0);
+        border: 1px solid #fff;
+        border-radius: 10px
+    }
+
+    .carousel-indicators .active {
+        width: 12px;
+        height: 12px;
+        margin: 0;
+        background-color: #fff
+    }
+
+    .carousel-caption {
+        position: absolute;
+        right: 15%;
+        bottom: 20px;
+        left: 15%;
+        z-index: 10;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        color: #fff;
+        text-align: center;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, .6)
+    }
+
+    .carousel-caption .btn {
+        text-shadow: none
+    }
+
+    @media screen and (min-width:768px) {
+
+        .carousel-control .glyphicon-chevron-left,
+        .carousel-control .glyphicon-chevron-right,
+        .carousel-control .icon-next,
+        .carousel-control .icon-prev {
+            width: 30px;
+            height: 30px;
+            margin-top: -10px;
+            font-size: 30px
+        }
+
+        .carousel-control .glyphicon-chevron-left,
+        .carousel-control .icon-prev {
+            margin-left: -10px
+        }
+
+        .carousel-control .glyphicon-chevron-right,
+        .carousel-control .icon-next {
+            margin-right: -10px
+        }
+
+        .carousel-caption {
+            right: 20%;
+            left: 20%;
+            padding-bottom: 30px
+        }
+
+        .carousel-indicators {
+            bottom: 20px
+        }
+    }
+</style>
+<script>
+
+</script>
+
+<br>
+<!-- <div class="row">
+    <div class="col-12 center">
+        <table class="table3 w-100">
+            <tr>
+                <th colspan="2" class="w-100">
+                    Productos
+                </th>
+            </tr>
+            <tr class="back1">
+                <td class="w-23 right">Productos :&nbsp;</td>
+                <td class="w-77 left">
+                    <select name="linea_select" id="linea_select" class="form-control input h-35 w-90 left" onchange="cambiarLinea();">
+                        {% for linea in lista_lineas %}
+                        {% if linea_session == linea.linea_id %}
+                        <option value="{{linea.linea_id}}" selected>{{linea.proveedor_id.proveedor}} - {{linea.linea}}</option>
+                        {% else %}
+                        <option value="{{linea.linea_id}}">{{linea.proveedor_id.proveedor}} - {{linea.linea}}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr class="back1">
+                <td class="w-23 right">B&uacute;squeda :&nbsp;</td>
+                <td class="w-77 left">
+                    <input type="text" class="form-control input w-70 left" value="{{producto_session}}" name="producto_search" id="producto_search">
+                    <input type="button" name="search_button" value="Buscar" class="btn btn-primary btn-sm" onclick="return buscarProducto();">
+                </td>
+            </tr>
+        </table>
+    </div>
+</div> -->
+
+<!--nuevo form de busqueda-->
+<div class="row">
+    <!-- DIRECT CHAT -->
+    <div class="card direct-chat direct-chat-primary collapsed-card w-98 center">
+        <div class="card-header">
+          <h3 class="card-title">Productos : <span id="span_producto"><em>{{txt_producto}}</em></span></h3>
+
+          <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <table class="w-100">
+                <tr>
+                    <td class="w-2">
+                        &nbsp;
+                    </td>
+                    <td class="w-98">
+                        <table class="table3 w-100">
+                            <tr class="back1">
+                                <td class="w-23 right">B&uacute;squeda :&nbsp;</td>
+                                <td class="w-77 left">
+                                    <input type="text" class="form-control input w-70 left" value="{{producto_session}}" name="producto_search" id="producto_search">
+                                    <input type="button" name="search_button" value="Buscar" class="btn btn-primary btn-sm" onclick="return buscarProducto();">
+                                </td>
+                            </tr>
+                            {% for linea in lista_lineas %}
+                            {% if linea_session == linea.linea_id %}
+                            <tr class="back{{forloop.counter|back_class}}">
+                                <td colspan="2" class="w-100 left">
+                                    <span class="link_productos_down">{{linea.proveedor_id.proveedor}} - {{linea.linea}}</span>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr class="back{{forloop.counter|back_class}}">
+                                <td colspan="2" class="w-100 left">
+                                    <span class="link_productos pointer" onclick="escogerLinea('{{linea.linea_id}}');">{{linea.proveedor_id.proveedor}} - {{linea.linea}}</span>
+                                </td>
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!--/.direct-chat -->
+</div>
+
+<form name="form_producto" method="POST" action="">
+    {% csrf_token %}
+    <input type="hidden" name="search_producto_x" value="acc">
+    <input type="hidden" name="producto" value="">
+</form>
+<form name="form_linea" method="POST" action="">
+    {% csrf_token %}
+    <input type="hidden" name="search_linea_x" value="acc">
+    <input type="hidden" name="linea" value="">
+</form>
+<form name="form_operation" method="POST" action="">
+    {% csrf_token %}
+    <input type="hidden" name="operation_x" value="">
+    <input type="hidden" name="id" value="">
+    <input type="hidden" name="url_main" value="{{url_main}}">
+</form>
+<form name="form_cart" method="POST" action="">
+    {% csrf_token %}
+    <input type="hidden" name="operation_x" value="">
+    <input type="hidden" name="id" value="">
+    <input type="hidden" name="url_main" value="{{url_main}}">
+</form>
+
+<!--cuadros-->
+<br>
+{% if pages_list|length > 1 %}
+<table>
+    <tr>
+        <td class="link_pages_down">Pages&nbsp;:&nbsp;</td>
+        {% for pagina in pages_list %}
+        {% if pagina_actual|lower == pagina|lower %}
+        <td class="link_pages_down">{{pagina}}</td>
+        {% else %}
+        <td class="link_pages pointer" onclick="document.form_page.pagina.value='{{pagina}}';document.form_page.submit();">{{pagina}}</td>
+        {% endif %}
+        {% endfor %}
+    </tr>
+</table>
+<form name="form_page" method="post" action="">
+    {% csrf_token %}
+    <input type="hidden" name="pagina" value="">
+</form>
+<br>
+{% endif %}
+
+<table class="w-100">
+    <tr>
+        <td class="w-2">&nbsp;</td>
+        <td class="w-96 center">
+            {% for lista_fila in listado_productos %}
+            <!--div contenedor-->
+            <div class="row w-100">
+                {% for producto in lista_fila %}
+                <!--columna 1-->
+                <div class="col-sm-4 center">
+                    {% if producto.linea != '' %}
+                    <div class="card w-100">
+                        <div class="card-body w-100">
+                            <div class="titulo_sucursal w-100 center">{{producto.producto}}</div>
+                            <div class="datos_sucursal w-100">
+                                {% if producto.imagen_thumb != '' %}
+                                <img class="pointer" onclick="mostrarD('loading_{{producto.producto_id}}', '{{producto.producto_id}}');" src="{% static '/media/productos/' %}{{producto.imagen_thumb}}">
+                                {% else %}
+                                <img src="{% static '/img/producto_sin_imagen.jpg' %}">
+                                {% endif %}
+                            </div>
+                            <div class="datos_sucursal w-100">
+                                <b>{{producto.precio}} Bs.</b>
+                                <input type="text" class="form-control input right w-10" id="producto_{{producto.producto_id}}" autocomplete="off" value="1" onkeyup="{% if vender_fracciones == 'si' %}validarNumeroPunto(this);{% else %}validarNumero(this);{% endif %}">
+                                <input type="hidden" id="producto_nombre_{{producto.producto_id}}" value="{{producto.producto}}">
+                                &nbsp;<i class="nav-icon fas fa-cart-plus pointer carrito_cliente" onclick="return mostrarModalCompra('{{producto.producto_id}}', '{{producto.precio}}');"></i><br>
+                                {% if producto.descripcion1 != '' %}{% autoescape off %} {{producto.descripcion1}}<br> {% endautoescape %}{% endif %}
+                                {% if producto.descripcion2 != '' %}{% autoescape off %} {{producto.descripcion2}}<br> {% endautoescape %}{% endif %}
+                                {% if producto.descripcion3 != '' %}{% autoescape off %} {{producto.descripcion3}}<br> {% endautoescape %}{% endif %}
+                                {% if producto.descripcion4 != '' %}{% autoescape off %} {{producto.descripcion4}}<br> {% endautoescape %}{% endif %}
+                                {% if producto.descripcion5 != '' %}{% autoescape off %} {{producto.descripcion5}}<br> {% endautoescape %}{% endif %}
+                                {% if producto.descripcion6 != '' %}{% autoescape off %} {{producto.descripcion6}}<br> {% endautoescape %}{% endif %}
+                                {% if producto.descripcion7 != '' %}{% autoescape off %} {{producto.descripcion7}}<br> {% endautoescape %}{% endif %}
+                                {% if producto.descripcion8 != '' %}{% autoescape off %} {{producto.descripcion8}}<br> {% endautoescape %}{% endif %}
+                                {% if producto.descripcion9 != '' %}{% autoescape off %} {{producto.descripcion9}}<br> {% endautoescape %}{% endif %}
+                                {% if producto.descripcion10 != '' %}{% autoescape off %} {{producto.descripcion10}}<br> {% endautoescape %}{% endif %}
+                            </div>
+                        </div>
+                        <!-- <div id="loading_{{producto.producto_id}}"> -->
+                        <div id="loading_{{producto.producto_id}}">
+                            <!-- <i class="fas fa-2x fa-sync-alt fa-spin"></i> -->
+                        </div>
+                        <!-- </div> -->
+                        <!-- <button type="button" class="btn btn-tool" data-card-widget="card-refresh" data-source="widgets.html" data-source-selector="#card-refresh-content" data-load-on-init="false"><i class="fas fa-sync-alt"></i></button> -->
+                        <!-- <div class="w-100 center">
+                            imagen
+                        </div> -->
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+            </div>
+            <!--fin div contenedor-->
+            {% endfor %}
+        </td>
+        <td class="w-2">&nbsp;</td>
+    </tr>
+</table>
+
+<!--carrousel imagenes-->
+<div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="myModal" role="dialog" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="pull-left">Imagenes del Producto</div>
+                <!-- <button class="close" data-dismiss="modal" title="Close" type="button"><span class="glyphicon glyphicon-remove"></span></button> -->
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!--begin carousel-->
+                <div class="carousel slide" data-interval="false" id="myGallery">
+                    <div class="carousel-inner" id="div_img_carousel">
+
+                        <!--end carousel-inner-->
+                    </div>
+                    <!--Begin Previous and Next buttons-->
+                    <a class="left carousel-control" data-slide="prev" href="#myGallery" role="button"><span class="glyphicon glyphicon-chevron-left"><i class="fas fa-angle-left"></i></span></a>
+                    <a class="right carousel-control" data-slide="next" href="#myGallery" role="button"><span class="glyphicon glyphicon-chevron-right"><i class="fas fa-angle-right"></i></span></a>
+                    <!--end myGallery-->
+                </div>
+                <!--end modal-body-->
+            </div>
+            <div class="modal-footer">
+                <!-- <div class="pull-left"><small>Photographs by <a href="https://placeimg.com" target="new">placeimg.com</a></small></div> -->
+                <button class="btn-sm close" data-dismiss="modal" type="button">Cerrar</button>
+                <!--end modal-footer-->
+            </div>
+            <!--end modal-content-->
+        </div>
+        <!--end modal-dialoge-->
+    </div>
+    <!--end myModal-->
+</div>
+
+<!--compra de producto-->
+<div aria-hidden="true" aria-labelledby="compraLabel" class="modal fade" id="modalCompra" role="dialog" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="pull-left">Compra de Producto</div>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <table class="table3 w-100">
+                    <tr>
+                        <th colspan="3" class="left w-100">Producto</th>
+                    </tr>
+                    <tr class="back2">
+                        <td class="w-60 left">
+                            <span id="pedido_producto">nombre del producto</span>
+                        </td>
+                        <td class="w-15 right">
+                            <input type="text" class="form-control input right w-95" id="pedido_cantidad" value="1" autocomplete="off" maxlength="3" onkeyup="{% if vender_fracciones == 'si' %}validarNumeroPunto(this);{% else %}validarNumero(this);{% endif %}totalPedido();">
+                            <input type="hidden" id="pedido_precio" value="0">
+                            <input type="hidden" id="pedido_producto_id" value="">
+                        </td>
+                        <td class="w-25 right">
+                            <b><span id="pedido_total">1 Bs.</span></b>
+                        </td>
+                    </tr>
+                    <tr class="back1">
+                        <td class="w-100" colspan="3">&nbsp;</td>
+                    </tr>
+                    <tr class="back1">
+                        <td colspan="3" class="w-100 center">
+                            <input type="button" id="add_cart" value="Agregar y Seguir" class="btn btn-primary btn-sm" onclick="return agregarSeguir();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="button" id="add_cart2" value="Comprar Ahora" class="btn btn-primary btn-sm" onclick="return comprarAhora();">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-sm close" data-dismiss="modal" type="button">Cerrar</button>
+            </div>
+            <!--end modal-content-->
+        </div>
+        <!--end modal-dialoge-->
+    </div>
+    <!--end myModal-->
+</div>
+
+<br><br><br><br><br><br>
+<!--pie de pagina-->
+{% include 'pages/pie_pagina.html' %}
+
+{% endblock %}

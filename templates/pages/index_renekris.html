@@ -1,0 +1,442 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+{% load static %}
+{% load jinja_tags %}
+
+{% block title %} | Inicio {% endblock %}
+{% block js_modulo %}
+<script type="text/javascript" src="{% static "" %}js/home_page.js"></script>
+{% endblock %}
+{% block content %}
+
+{% if autenticado == 'si' %}
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+{% else %}
+
+<br>
+<div class="row">
+    <div class="col-12 center">
+        <span class="index_titulo">Productos Kris</span>
+    </div>
+</div>
+
+<!--cuadros-->
+<br>
+<table class="w-100">
+    <tr>
+        <td class="w-4">&nbsp;</td>
+        <td class="w-96 center">
+            <!--primeros 3 cuadros depues de la imagen-->
+            <div class="row w-100 cuadros_index">
+                <div class="col-sm-3 center">
+                    <img src="{% static 'img/page/lineas/kris_mayonesa_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('1');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('1');">Mayonesa Kris</a>
+                </div>
+                
+                <div class="col-sm-3 center">
+                    <img src="{% static 'img/page/lineas/kris_ketchup_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('2');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('2');">Ketchup Kris</a>
+                </div>
+                
+                <div class="col-sm-3 center">
+                    <img src="{% static 'img/page/lineas/kris_mostaza_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('3');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('3');">Mostaza Kris</a>
+                </div>
+                
+                <div class="col-sm-3 center">
+                    <img src="{% static 'img/page/lineas/kris_salsa_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('4');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('4');">Salsa Kris</a>
+                </div>
+            </div>
+            
+            <br>
+            <div class="row w-100 cuadros_index">
+                <div class="col-sm-3 center">
+                    <img src="{% static 'img/page/lineas/kris_kriolla_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('5');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('5');">Kriolla</a>
+                </div>
+                
+                <div class="col-sm-3 center">
+                    <img src="{% static 'img/page/lineas/kris_aceite_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('7');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('7');">Aceite Kris</a>
+                </div>
+                
+                <div class="col-sm-3 center">
+                    <img src="{% static 'img/page/lineas/kris_pure_papas_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('9');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('9');">Pure Papas</a>
+                </div>
+                
+                <div class="col-sm-3 center">
+                    <img src="{% static 'img/page/lineas/kris_sopa_crema_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('8');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('8');">Sopas y Cremas</a>
+                </div>
+            </div>
+            
+            <br>
+            <div class="row w-100 cuadros_index">
+                <div class="col-sm-3 center">
+                    <img src="{% static 'img/page/lineas/kris_avena_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('13');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('13');">Avena Kris</a>
+                </div>
+                
+                <div class="col-sm-3 center">
+                    <img src="{% static 'img/page/lineas/kris_cereal_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('12');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('12');">Cereal Kris</a>
+                </div>
+                
+                <div class="col-sm-3 center">
+                    <img src="{% static 'img/page/lineas/kris_maicena_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('10');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('10');">Maicena</a>
+                </div>
+                
+                <div class="col-sm-3 center">
+                    <img src="{% static 'img/page/lineas/kris_milkshake_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('14');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('14');">Milk Shake</a>
+                </div>
+            </div>
+            
+            <br>
+            <div class="row w-100 cuadros_index">
+                <div class="col-sm-3 center">
+                    <img src="{% static 'img/page/lineas/kris_flan_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('16');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('16');">Flan, Pudin, Duraznos</a>
+                </div>
+                
+                <div class="col-sm-3 center">
+                    <img src="{% static 'img/page/lineas/kris_gelatina_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('15');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('15');">Gelatina</a>
+                </div>
+                
+                <div class="col-sm-3 center">
+                    <img src="{% static 'img/page/lineas/kris_kriskao_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('11');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('11');">Kriskao</a>
+                </div>
+                
+                <div class="col-sm-3 center">
+                    <img src="{% static 'img/page/lineas/kris_nectar_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('29');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('29');">Nectar Kris</a>
+                </div>
+            </div>
+            
+            <br>
+            <div class="row w-100 cuadros_index">
+                <div class="col-sm-6 center">
+                    <img src="{% static 'img/page/lineas/kris_refresco_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('30');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('30');">Refrescos Kris</a>
+                </div>
+                
+                <div class="col-sm-6 center">
+                    <img src="{% static 'img/page/lineas/kris_energy_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('32');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('32');">Kris Energy</a>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+
+<br><br>
+<div class="row">
+    <div class="col-12 center">
+        <span class="index_titulo">Productos Fleischmann</span>
+    </div>
+</div>
+
+<!--cuadros-->
+<br>
+<table class="w-100">
+    <tr>
+        <td class="w-4">&nbsp;</td>
+        <td class="w-96 center">
+            <!--primeros 3 cuadros depues de la imagen-->
+            <div class="row w-100 cuadros_index">
+                <div class="col-sm-3 center">
+                    <img src="{% static 'img/page/lineas/fleis_levadura_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('20');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('20');">Levaduras</a>
+                </div>
+                
+                <div class="col-sm-3 center">
+                    <img src="{% static 'img/page/lineas/fleis_polvo_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('21');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('21');">Polvo de Hornear</a>
+                </div>
+                
+                <div class="col-sm-3 center">
+                    <img src="{% static 'img/page/lineas/fleis_mejorador_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('22');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('22');">Mejorador de Masa</a>
+                </div>
+                
+                <div class="col-sm-3 center">
+                    <img src="{% static 'img/page/lineas/fleis_crema_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('23');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('23');">Cremas en Polvo</a>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+
+<br>
+<br>
+<div class="row">
+    <div class="col-12 center">
+        <span class="index_titulo">Productos Bristar</span>
+    </div>
+</div>
+
+<!--cuadros-->
+<br>
+<table class="w-100">
+    <tr>
+        <td class="w-4">&nbsp;</td>
+        <td class="w-96 center">
+            <!--primeros 3 cuadros depues de la imagen-->
+            <div class="row w-100 cuadros_index">
+                <div class="col-sm-4 center">
+                    <img src="{% static 'img/page/lineas/bristar_detergente_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('33');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('33');">Detergente en Polvo</a>
+                </div>
+                
+                <div class="col-sm-4 center">
+                    <img src="{% static 'img/page/lineas/bristar_vajilla_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('34');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('34');">LavaVajillas</a>
+                </div>
+                
+                <div class="col-sm-4 center">
+                    <img src="{% static 'img/page/lineas/bristar_piso_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('35');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('35');">LimpiaPisos</a>
+                </div>
+            </div>
+            
+            <br>
+            <div class="row w-100 cuadros_index">
+                <div class="col-sm-4 center">
+                    <img src="{% static 'img/page/lineas/bristar_grasa_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('36');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('36');">Sacagrasa, Sarro</a>
+                </div>
+                
+                <div class="col-sm-4 center">
+                    <img src="{% static 'img/page/lineas/bristar_banio_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('37');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('37');">Limpia Vidrios, Ba&#241;os</a>
+                </div>
+                
+                <div class="col-sm-4 center">
+                    <img src="{% static 'img/page/lineas/bristar_shabay_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('38');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('38');">Shabay Jabon liquido</a>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<br>
+<br>
+<div class="row">
+    <div class="col-12 center">
+        <span class="index_titulo">Productos Real</span>
+    </div>
+</div>
+
+<!--cuadros-->
+<br>
+<table class="w-100">
+    <tr>
+        <td class="w-4">&nbsp;</td>
+        <td class="w-96 center">
+            <!--primeros 3 cuadros depues de la imagen-->
+            <div class="row w-100 cuadros_index">
+                <div class="col-sm-4 center">
+                    <img src="{% static 'img/page/lineas/real_ketchup_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('40');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('40');">Ketchup Real</a>
+                </div>
+                
+                <div class="col-sm-4 center">
+                    <img src="{% static 'img/page/lineas/real_mayonesa_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('41');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('41');">Mayonesa Real</a>
+                </div>
+                
+                <div class="col-sm-4 center">
+                    <img src="{% static 'img/page/lineas/real_refresco_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('31');">
+                    <br>
+                    <a href="#" class="link_index" onclick="escogerLinea('31');">Refrescos Real</a>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<br>
+<br>
+<table class="w-100">
+    <tr>
+        <td class="w-4">&nbsp;</td>
+        <td class="w-96 center">
+            <div class="row w-100 cuadros_index">
+                <div class="col-sm-6 center">
+                    <div class="row w-100">
+                        <div class="col-12 center">
+                            <span class="index_titulo">Productos Frussion</span>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row w-100">
+                        <div class="col-sm-6 center">
+                            <img src="{% static 'img/page/lineas/frussion_refresco_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('25');">
+                            <br>
+                            <a href="#" class="link_index" onclick="escogerLinea('25');">Refrescos Frussion</a>
+                        </div>
+                        <div class="col-sm-6 center">
+                            <img src="{% static 'img/page/lineas/frussion_sin_azucar_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('26');">
+                            <br>
+                            <a href="#" class="link_index" onclick="escogerLinea('26');">Frussion sin Azucar</a>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+                
+                <div class="col-sm-6 center">
+                    <div class="row w-100">
+                        <div class="col-12 center">
+                            <span class="index_titulo">Casa del Camba</span>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row w-100">
+                        <div class="col-sm-6 center">
+                            <img src="{% static 'img/page/lineas/camba_bebida_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('39');">
+                            <br>
+                            <a href="#" class="link_index" onclick="escogerLinea('39');">Bebida Camba</a>
+                        </div>
+                        <div class="col-sm-6 center">
+                            <img src="{% static 'img/page/lineas/camba_llajua_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('18');">
+                            <br>
+                            <a href="#" class="link_index" onclick="escogerLinea('18');">Llajua y Picante de Pollo</a>
+                        </div>
+                    </div>
+                    <br>  
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<br>
+<br>
+<table class="w-100">
+    <tr>
+        <td class="w-4">&nbsp;</td>
+        <td class="w-96 center">
+            <div class="row w-100 cuadros_index">
+                <div class="col-sm-3 center">
+                    <div class="row w-100">
+                        <div class="col-12 center">
+                            <span class="index_titulo">El Pescador</span>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row w-100">
+                        <div class="col-sm-12 center">
+                            <img src="{% static 'img/page/lineas/pescador_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('17');">
+                            <br>
+                            <a href="#" class="link_index" onclick="escogerLinea('17');">El Pescador</a>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+                
+                <div class="col-sm-3 center">
+                    <div class="row w-100">
+                        <div class="col-12 center">
+                            <span class="index_titulo">Mazzei</span>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row w-100">
+                        <div class="col-sm-12 center">
+                            <img src="{% static 'img/page/lineas/mazzei_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('19');">
+                            <br>
+                            <a href="#" class="link_index" onclick="escogerLinea('19');">Mazzei</a>
+                        </div>
+                    </div>
+                    <br>  
+                </div>
+                
+                <div class="col-sm-3 center">
+                    <div class="row w-100">
+                        <div class="col-12 center">
+                            <span class="index_titulo">Yogurt Tolon</span>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row w-100">
+                        <div class="col-sm-12 center">
+                            <img src="{% static 'img/page/lineas/tolon_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('27');">
+                            <br>
+                            <a href="#" class="link_index" onclick="escogerLinea('27');">Yogurt Tolon</a>
+                        </div>
+                    </div>
+                    <br>  
+                </div>
+                
+                <div class="col-sm-3 center">
+                    <div class="row w-100">
+                        <div class="col-12 center">
+                            <span class="index_titulo">Agua Speranza</span>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row w-100">
+                        <div class="col-sm-12 center">
+                            <img src="{% static 'img/page/lineas/speranza_01_png.png' %}" class="img-fluid pointer" onclick="escogerLinea('28');">
+                            <br>
+                            <a href="#" class="link_index" onclick="escogerLinea('28');">Agua Speranza</a>
+                        </div>
+                    </div>
+                    <br>  
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<form name="form_linea" method="POST" action="{{url_productos}}">
+    {% csrf_token %}
+    <input type="hidden" name="search_linea_x" value="acc">
+    <input type="hidden" name="linea" value="">
+</form>
+
+<!--pie de pagina-->
+{% include 'pages/pie_pagina.html' %}
+{% endif %}
+{% endblock %}

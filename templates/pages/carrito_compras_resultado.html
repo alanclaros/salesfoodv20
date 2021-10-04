@@ -1,0 +1,13 @@
+<div id="messagepg" class="container">
+    <div class="alert alert-{% if error == 1 %}warning{% else %}success{% endif %} alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        {% if error == 1 %}
+        <h5><i class="icon fas fa-exclamation-triangle"></i> Error de Registro!</h5>
+        Error al registrar su pedido, por favor verifique que lleno correctamente todos los campos.
+        {% else %}
+        <h5><i class="icon fas fa-check"></i> Pedido Enviado!</h5>
+        <h6>Su pedido se registro correctamente, nos pondremos en contacto con usted lo antes posible.</h6>
+        {% endif %}
+    </div>
+</div>
+<input type="hidden" id="error_carrito" value="{{error}}">
