@@ -35,8 +35,13 @@ function mandarFormularioConfiguracion(operation, operation2, formulario, add_bu
 
 		div_modulo.html(imagen_modulo);
 
+		let para_cargar = url_empresa;
+		if (para_cargar != '') {
+			para_cargar = url_empresa + '/';
+		}
+
 		$.ajax({
-			url: '/',
+			url: para_cargar,
 			type: 'post',
 			data: fd,
 			contentType: false,

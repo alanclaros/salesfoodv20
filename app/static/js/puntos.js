@@ -243,8 +243,16 @@ function guardarPuntosAlmacenes(formulario, add_button, button_cancel) {
 
 		div_modulo.html(imagen_modulo);
 
+		let para_cargar = url_empresa;
+		if (para_cargar != '') {
+			para_cargar = url_empresa + '/';
+		}
+		// div_modulo.load(para_cargar, datos_operation, function () {
+		// 	//termina de cargar la ventana
+		// });
+
 		$.ajax({
-			url: '/',
+			url: para_cargar,
 			type: 'post',
 			data: fd,
 			contentType: false,
@@ -299,9 +307,13 @@ function guardarPuntosPrecios(formulario, add_button, button_cancel) {
 		fd.append('precio_c_pp', document.getElementById('precio_c_pp').value);
 
 		div_modulo.html(imagen_modulo);
+		let para_cargar = url_empresa;
+		if (para_cargar != '') {
+			para_cargar = url_empresa + '/';
+		}
 
 		$.ajax({
-			url: '/',
+			url: para_cargar,
 			type: 'post',
 			data: fd,
 			contentType: false,

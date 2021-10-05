@@ -856,11 +856,16 @@ async function formularioImagenProducto(operation, operation2, formulario, add_b
 
 	div_modulo.html(imagen_modulo);
 
+	let para_cargar = url_empresa;
+	if (para_cargar != '') {
+		para_cargar = url_empresa + '/';
+	}
+
 	let result;
 
 	try {
 		result = await $.ajax({
-			url: '/',
+			url: para_cargar,
 			method: 'POST',
 			type: 'POST',
 			cache: false,

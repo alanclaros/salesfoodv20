@@ -43,7 +43,13 @@ function buscarCI() {
             tiempo_fin = tiempo;
             timeDiff /= 1000;
 
-            imagen = '<img src="/static/img/pass/loading2.gif">';
+            if (url_empresa == '') {
+                imagen = '<img src="/static/img/pass/loading2.gif">';
+            }
+            else {
+                imagen = '<img src="' + url_empresa + '/static/img/pass/loading2.gif">';
+            }
+
             url_main = document.forms['formulario'].elements['url_main'].value;
             token = document.forms['formulario'].elements['csrfmiddlewaretoken'].value;
             datos = {

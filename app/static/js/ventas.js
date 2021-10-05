@@ -1242,9 +1242,15 @@ async function guardarVenta() {
     div_ventas_dia.html(imagen);
 
     let result2;
+
+    let para_cargar = url_empresa;
+    if (para_cargar != '') {
+        para_cargar = url_empresa + '/';
+    }
+
     try {
         result2 = await $.ajax({
-            url: '/',
+            url: para_cargar,
             method: 'POST',
             type: 'POST',
             cache: false,

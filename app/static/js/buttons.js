@@ -154,7 +154,12 @@ function openModule(module_id) {
 	}
 
 	div_modulo.html(imagen_modulo);
-	div_modulo.load('/', datos_modulo, function () {
+	let para_cargar = url_empresa;
+	if (para_cargar != '') {
+		para_cargar = url_empresa + '/';
+	}
+
+	div_modulo.load(para_cargar, datos_modulo, function () {
 		//termina de cargar la ventana
 	});
 
@@ -190,7 +195,11 @@ function sendOrder(order, type, field_order, field_type) {
 	datos_search[field_type] = type;
 
 	div_modulo.html(imagen_modulo);
-	div_modulo.load('/', datos_search, function () {
+	let para_cargar = url_empresa;
+	if (para_cargar != '') {
+		para_cargar = url_empresa + '/';
+	}
+	div_modulo.load(para_cargar, datos_search, function () {
 		//termina de cargar la ventana
 	});
 }
@@ -216,7 +225,11 @@ function sendOperation(operation = '', operation2 = '', operation3 = '', id = ''
 	}
 
 	div_modulo.html(imagen_modulo);
-	div_modulo.load('/', datos_operation, function () {
+	let para_cargar = url_empresa;
+	if (para_cargar != '') {
+		para_cargar = url_empresa + '/';
+	}
+	div_modulo.load(para_cargar, datos_operation, function () {
 		//termina de cargar la ventana
 	});
 }
@@ -231,7 +244,11 @@ function backWindow() {
 	}
 
 	div_modulo.html(imagen_modulo);
-	div_modulo.load('/', datos_operation, function () {
+	let para_cargar = url_empresa;
+	if (para_cargar != '') {
+		para_cargar = url_empresa + '/';
+	}
+	div_modulo.load(para_cargar, datos_operation, function () {
 		//termina de cargar la ventana
 	});
 }
@@ -251,7 +268,11 @@ function backWindow2() {
 	}
 
 	div_modulo.html(imagen_modulo);
-	div_modulo.load('/', datos_operation, function () {
+	let para_cargar = url_empresa;
+	if (para_cargar != '') {
+		para_cargar = url_empresa + '/';
+	}
+	div_modulo.load(para_cargar, datos_operation, function () {
 		//termina de cargar la ventana
 	});
 }
@@ -274,7 +295,11 @@ function backWindow3() {
 	}
 
 	div_modulo.html(imagen_modulo);
-	div_modulo.load('/', datos_operation, function () {
+	let para_cargar = url_empresa;
+	if (para_cargar != '') {
+		para_cargar = url_empresa + '/';
+	}
+	div_modulo.load(para_cargar, datos_operation, function () {
 		//termina de cargar la ventana
 	});
 }
